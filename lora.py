@@ -97,6 +97,7 @@ class LoRA_sam(nn.Module):
             nn.init.zeros_(w_B)
 
     def save_lora_parameters(self, filename):
+        "save lora and fc parameters"
 
         return None
 
