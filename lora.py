@@ -89,6 +89,8 @@ class LoRA_sam(nn.Module):
 
         self.reset_parameters()
         self.sam = sam_model
+        self.lora_vit = sam_model.image_encoder
+
 
     def reset_parameters(self):
         for w_A in self.A_weights:
@@ -96,14 +98,25 @@ class LoRA_sam(nn.Module):
         for w_B in self.B_weights:
             nn.init.zeros_(w_B)
 
+
     def save_lora_parameters(self, filename):
         "save lora and fc parameters"
+        num_layer = len(self.A_weights)
+        # sufix 03:d -> allows to have a name 1 instead of 001
+        a_tensors = {f"w_a_{i:03d}": self.A_weights[i].weight for i in range(num_layer)}
+        b_tensors = {f"w_a_{i:03d}": self.B_weights[i].weight for i in range(num_layer)}
 
-        return None
+        dim_in = self.lora_vit.head.in_features
+        dim_out = self.lora_vit.head.out_features
 
+        fc_tensors = {f"fc_{dim_in}in_{dim_out}out": self.lora_vit.head.weight}
+
+        merged_dict = {**a_tensors, **b_tensors, **fc_tensors}
+        save_file(merged_dict, filename)
 
 
     def load_lora_parameters(self, filename):
+        
 
         return None
 
