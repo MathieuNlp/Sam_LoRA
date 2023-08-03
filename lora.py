@@ -158,7 +158,7 @@ class LoRA_sam(nn.Module):
 if __name__ == "__main__":
     sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
     sam_lora = LoRA_sam(sam,4)
-    print(sam_lora.sam.image_encoder(torch.rand(size=(1,3,1024,1024))).shape)
+    #sam_lora.sam.image_encoder(torch.rand(size=(1,3,1024,1024))
 
 
 
