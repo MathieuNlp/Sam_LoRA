@@ -44,6 +44,7 @@ class LoRA_sam(nn.Module):
 
     def __init__(self, sam_model, rank, lora_layer=None):
         super(LoRA_sam, self).__init__()
+        self.rank = rank
         assert rank > 0
         # base_vit_dim = sam_model.image_encoder.patch_embed.proj.out_channels
 
@@ -96,7 +97,7 @@ class LoRA_sam(nn.Module):
         for w_A in self.A_weights:
             nn.init.kaiming_uniform_(w_A.weight, a=np.sqrt(5))
         for w_B in self.B_weights:
-            nn.init.zeros_(w_B)
+            nn.init.zeros_(w_B.weight)
 
 
     def save_lora_parameters(self, filename):
@@ -157,7 +158,7 @@ class LoRA_sam(nn.Module):
 if __name__ == "__main__":
     sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
     sam_lora = LoRA_sam(sam,4)
-    sam_lora.sam.image_encoder(torch.rand(size=(1,3,512,512)))
+    print(sam_lora.sam.image_encoder(torch.rand(size=(1,3,1024,1024))).shape)
 
 
 
