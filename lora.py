@@ -1,5 +1,4 @@
 from src.segment_anything import build_sam_vit_b, SamPredictor
-from src.segment_anything.modeling import Sam
 
 import numpy as np
 import torch
