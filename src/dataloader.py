@@ -13,7 +13,7 @@ import numpy as np
 import utils
 from transformers import SamProcessor
 
-dataset_path = "../datasets/DIY_dataset"
+dataset_path = "./DIY_dataset"
 
 class DatasetSegmentation(Dataset):
     def __init__(self, folder_path, processor):
