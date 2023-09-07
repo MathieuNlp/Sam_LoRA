@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
-from torchvision import datasets
+from torchvision import datasets, transforms
 import torchvision.transforms as transforms
 from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
@@ -10,13 +10,13 @@ import os
 from PIL import Image
 import numpy as np
 
-import utils
+import src.utils as utils
 from transformers import SamProcessor
 
 dataset_path = "./bottle_glass_dataset"
 
 class DatasetSegmentation(Dataset):
-    def __init__(self, folder_path, processor):
+    def __init__(self, folder_path, processor, transform):
         super(DatasetSegmentation, self).__init__()
         # data processor of images bedore inputing into the SAM model
         self.processor = processor
@@ -26,6 +26,7 @@ class DatasetSegmentation(Dataset):
         self.mask_files = []
         for img_path in self.img_files:
              self.mask_files.append(os.path.join(folder_path,'masks', os.path.basename(img_path)[:-4] + ".tiff")) 
+        self.transform = transform
 
     def __len__(self):
         return len(self.img_files)
@@ -37,6 +38,9 @@ class DatasetSegmentation(Dataset):
             image =  Image.open(img_path)
             mask = Image.open(mask_path)
             mask = mask.convert('1')
+            if self.transform:
+                image = self.transform(image)
+                mask = self.transform(mask)  
             ground_truth_mask =  np.array(mask)
 
             # get bounding box prompt
@@ -49,17 +53,12 @@ class DatasetSegmentation(Dataset):
 
             # add ground truth segmentation
             inputs["ground_truth_mask"] = ground_truth_mask
-            inputs["pil_image"] = image
-            inputs["pil_mask"] = mask
 
             return inputs
 
 
-processor = SamProcessor.from_pretrained("facebook/sam-vit-base")
-dataset = DatasetSegmentation(dataset_path, processor)
 
-dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
-
-batch = next(iter(dataloader))
-for k,v in batch.items():
-  print(k,v.shape)
+if __name__ == "__main__":
+    processor = SamProcessor.from_pretrained("facebook/sam-vit-base")
+    dataset = DatasetSegmentation(dataset_path, processor)
+    #dataloader = DataLoader(dataset, batch_size=2, shuffle=True)

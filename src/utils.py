@@ -1,5 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import PIL
+from PIL import Image
+from torchvision import datasets, transforms
+import torchvision.transforms.functional as F
+
 
 def show_mask(mask, ax, random_color=False):
     if random_color:
@@ -19,10 +24,17 @@ def plot_image_mask(image, mask):
     axes.title.set_text(f"Ground truth mask")
     axes.axis("off")
     plt.savefig("./plots/gt_mask.jpg")
+    
 
 def plot_image_mask_dataset(dataset, idx):
-    example = dataset[idx]
-    plot_image_mask(example["pil_image"], example["pil_mask"])
+    image_path = dataset.img_files[idx]
+    mask_path = dataset.mask_files[idx]
+    image = Image.open(image_path)
+    mask = Image.open(mask_path)
+    mask = mask.convert('1')
+    plot_image_mask(image, mask)
+
+
 
 def get_bounding_box(ground_truth_map):
   # get bounding box from mask
@@ -40,7 +52,3 @@ def get_bounding_box(ground_truth_map):
   bbox = [x_min, y_min, x_max, y_max]
 
   return bbox
-
-
-def reshape_masks_images(masks):
-    
