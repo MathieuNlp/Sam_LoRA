@@ -1,4 +1,4 @@
 import dataloader
 import utils
 
-batch = next(iter(dataloader.dataloader))
+#utils.plot_image_mask_dataset(dataloader.dataset, 2)

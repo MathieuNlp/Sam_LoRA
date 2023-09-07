@@ -13,7 +13,7 @@ import numpy as np
 import utils
 from transformers import SamProcessor
 
-dataset_path = "./DIY_dataset"
+dataset_path = "./bottle_glass_dataset"
 
 class DatasetSegmentation(Dataset):
     def __init__(self, folder_path, processor):
@@ -22,6 +22,7 @@ class DatasetSegmentation(Dataset):
         self.processor = processor
         # get image and mask paths
         self.img_files = glob.glob(os.path.join(folder_path,'images','*.jpg'))
+
         self.mask_files = []
         for img_path in self.img_files:
              self.mask_files.append(os.path.join(folder_path,'masks', os.path.basename(img_path)[:-4] + ".tiff")) 
@@ -57,13 +58,8 @@ class DatasetSegmentation(Dataset):
 processor = SamProcessor.from_pretrained("facebook/sam-vit-base")
 dataset = DatasetSegmentation(dataset_path, processor)
 
-example = dataset[0]
+dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
 
-fig, axes = plt.subplots()
-print(example["ground_truth_mask"].shape)
-axes.imshow(np.array(example["pil_image"]))
-ground_truth_seg = np.array(example["pil_mask"])
-print(ground_truth_seg.shape)
-utils.show_mask(ground_truth_seg, axes)
-axes.title.set_text(f"Ground truth mask")
-axes.axis("off")
+batch = next(iter(dataloader))
+for k,v in batch.items():
+  print(k,v.shape)

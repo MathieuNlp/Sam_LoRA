@@ -10,6 +10,20 @@ def show_mask(mask, ax, random_color=False):
     mask_image = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
     ax.imshow(mask_image)
 
+
+def plot_image_mask(image, mask):
+    fig, axes = plt.subplots()
+    axes.imshow(np.array(image))
+    ground_truth_seg = np.array(mask)
+    show_mask(ground_truth_seg, axes)
+    axes.title.set_text(f"Ground truth mask")
+    axes.axis("off")
+    plt.savefig("./plots/gt_mask.jpg")
+
+def plot_image_mask_dataset(dataset, idx):
+    example = dataset[idx]
+    plot_image_mask(example["pil_image"], example["pil_mask"])
+
 def get_bounding_box(ground_truth_map):
   # get bounding box from mask
   idx = np.where(ground_truth_map > 0)
@@ -26,3 +40,7 @@ def get_bounding_box(ground_truth_map):
   bbox = [x_min, y_min, x_max, y_max]
 
   return bbox
+
+
+def reshape_masks_images(masks):
+    
