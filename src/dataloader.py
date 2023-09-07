@@ -57,13 +57,13 @@ class DatasetSegmentation(Dataset):
 processor = SamProcessor.from_pretrained("facebook/sam-vit-base")
 dataset = DatasetSegmentation(dataset_path, processor)
 
-# example = dataset[0]
+example = dataset[0]
 
-# fig, axes = plt.subplots()
-# print(example["ground_truth_mask"].shape)
-# axes.imshow(np.array(example["pil_image"]))
-# ground_truth_seg = np.array(example["pil_mask"])
-# print(ground_truth_seg.shape)
-# utils.show_mask(ground_truth_seg, axes)
-# axes.title.set_text(f"Ground truth mask")
-# axes.axis("off")
+fig, axes = plt.subplots()
+print(example["ground_truth_mask"].shape)
+axes.imshow(np.array(example["pil_image"]))
+ground_truth_seg = np.array(example["pil_mask"])
+print(ground_truth_seg.shape)
+utils.show_mask(ground_truth_seg, axes)
+axes.title.set_text(f"Ground truth mask")
+axes.axis("off")
