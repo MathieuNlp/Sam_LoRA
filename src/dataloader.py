@@ -29,8 +29,12 @@ class DatasetSegmentation(Dataset):
         for img_path in self.img_files:
              self.mask_files.append(os.path.join(folder_path,'masks', os.path.basename(img_path)[:-4] + ".tiff")) 
 
-        self.transform = transforms.Compose([
+        self.transform_image = transforms.Compose([
               transforms.Resize((1024,1024))
+        ])
+
+        self.transform_mask = transforms.Compose([
+              transforms.Resize((256,256))
         ])
     def __len__(self):
         return len(self.img_files)
@@ -43,9 +47,9 @@ class DatasetSegmentation(Dataset):
             mask = Image.open(mask_path)
             mask = mask.convert('1')
             original_size = tuple(image.size)
-            if self.transform:
-                 image = self.transform(image)
-                 mask = self.transform(mask)
+            if self.transform_image or self.transform_mask:
+                 image = self.transform_image(image)
+                 mask = self.transform_mask(mask)
             ground_truth_mask =  np.array(mask)
 
             # get bounding box prompt

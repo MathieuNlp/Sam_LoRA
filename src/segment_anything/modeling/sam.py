@@ -153,6 +153,8 @@ class Sam(nn.Module):
           (torch.Tensor): Batched masks in BxCxHxW format, where (H, W)
             is given by original_size.
         """
+
+        print(masks.shape, )
         masks = F.interpolate(
             masks,
             (self.image_encoder.img_size, self.image_encoder.img_size),
@@ -160,8 +162,7 @@ class Sam(nn.Module):
             align_corners=False,
         )
         masks = masks[..., : input_size[0], : input_size[1]]
-        print(masks.shape)
-        print(original_size)
+
         masks = F.interpolate(masks, original_size, mode="bilinear", align_corners=False)
         return masks
 

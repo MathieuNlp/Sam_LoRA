@@ -18,7 +18,8 @@ dataset_path = "./bottle_glass_dataset"
 
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
 sam_lora = LoRA_sam(sam,4)  
-processor = Samprocessor(sam_lora.sam)
+model = sam_lora.sam
+processor = Samprocessor(model)
 dataset = DatasetSegmentation(dataset_path, processor)
 #utils.plot_image_mask_dataset(dataset, 3)
 
@@ -30,7 +31,6 @@ num_epochs = 2
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-model = sam_lora.sam
 model.to(device)
 model.train()
 
