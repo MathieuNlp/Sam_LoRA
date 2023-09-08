@@ -42,6 +42,7 @@ class DatasetSegmentation(Dataset):
             image =  Image.open(img_path)
             mask = Image.open(mask_path)
             mask = mask.convert('1')
+            original_size = tuple(image.size)
             if self.transform:
                  image = self.transform(image)
                  mask = self.transform(mask)
@@ -49,17 +50,8 @@ class DatasetSegmentation(Dataset):
 
             # get bounding box prompt
             box = utils.get_bounding_box(ground_truth_mask)
-
-            inputs = self.processor(image, prompt=box)
-            # process image and masks with the processor
-            # inputs = self.processor(image, input_boxes=[[prompt]], return_tensors="pt")
-
-            # # remove batch dimension which the processor adds by default
-            # inputs = {k:v.squeeze(0) for k,v in inputs.items()}
-
-            # # add ground truth segmentation
+            inputs = self.processor(image, original_size, prompt=box)
             inputs["ground_truth_mask"] = ground_truth_mask
 
             return inputs
     
-

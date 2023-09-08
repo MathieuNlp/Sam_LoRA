@@ -3,6 +3,8 @@ from src.segment_anything.utils.transforms import ResizeLongestSide
 import numpy as np
 import torch
 from typing import Optional, Tuple
+import einops
+from einops import rearrange
 
 class Samprocessor:
     def __init__(self, sam_model):
@@ -11,9 +13,9 @@ class Samprocessor:
         self.transform = ResizeLongestSide(sam_model.image_encoder.img_size)
         self.reset_image()
 
-    def __call__(self, image, prompt):
+    def __call__(self, image, original_size, prompt):
         # Processing of the image
-        image_torch = self.process_image(image)
+        image_torch = self.process_image(image, original_size)
         # embeddings dans self.features
         if not self.is_image_set:
             raise RuntimeError("An image must be set with .set_image(...) before mask prediction.")
@@ -21,7 +23,7 @@ class Samprocessor:
         box_torch = self.process_prompt(prompt)
 
         inputs = {"image": image_torch, 
-                 "original_size": self.original_size,
+                  "original_size": self.original_size,
                  "boxes": box_torch}
         
         return inputs
@@ -54,17 +56,20 @@ class Samprocessor:
         self.original_size = original_image_size
         self.input_size = tuple(transformed_image.shape[-2:])
         input_image = self.model.preprocess(transformed_image)
-        self.features = self.model.image_encoder(input_image)
+        #self.features = self.model.image_encoder(input_image)
         self.is_image_set = True
 
+        return input_image
 
-    def process_image(self, image):
+
+    def process_image(self, image, original_size):
         nd_image = np.array(image)
-        input_image = self.transform.apply_image(nd_image)
+        input_image= self.transform.apply_image(nd_image)
         input_image_torch = torch.as_tensor(input_image, device=self.device)
         input_image_torch = input_image_torch.permute(2, 0, 1).contiguous()[None, :, :, :]
-        self.set_torch_image(input_image_torch, tuple(image.size))
-        return input_image_torch
+        input = self.set_torch_image(input_image_torch, original_size)
+
+        return input
 
     def process_prompt(self, box):
         # We only use boxes

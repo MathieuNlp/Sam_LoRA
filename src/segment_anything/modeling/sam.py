@@ -97,7 +97,6 @@ class Sam(nn.Module):
         """
         input_images = torch.stack([self.preprocess(x["image"]) for x in batched_input], dim=0)
         input_images = rearrange(input_images, "b x c h w -> (b x) c h w")
-        print(input_images.shape)
         image_embeddings = self.image_encoder(input_images)
 
         outputs = []
@@ -161,6 +160,8 @@ class Sam(nn.Module):
             align_corners=False,
         )
         masks = masks[..., : input_size[0], : input_size[1]]
+        print(masks.shape)
+        print(original_size)
         masks = F.interpolate(masks, original_size, mode="bilinear", align_corners=False)
         return masks
 

@@ -52,3 +52,15 @@ def get_bounding_box(ground_truth_map):
   bbox = [x_min, y_min, x_max, y_max]
 
   return bbox
+
+def dict_list_inversion(dict):
+    # Function that is only for the dict(list) in batched from the dataloader so that it transforms it into list(dict) for sam
+    res = []
+    n = dict["image"].shape[0]
+    for k in range (n):
+        d = {"image":  dict["image"][k], 
+             "original_size":dict["original_size"][k],
+             "boxes": dict["boxes"][k]}
+        
+        res.append(d)
+    return res
