@@ -13,7 +13,8 @@ from typing import Any, Dict, List, Tuple
 from .image_encoder import ImageEncoderViT
 from .mask_decoder import MaskDecoder
 from .prompt_encoder import PromptEncoder
-
+import einops
+from einops import rearrange
 
 class Sam(nn.Module):
     mask_threshold: float = 0.0
@@ -95,6 +96,8 @@ class Sam(nn.Module):
                 to subsequent iterations of prediction.
         """
         input_images = torch.stack([self.preprocess(x["image"]) for x in batched_input], dim=0)
+        input_images = rearrange(input_images, "b x c h w -> (b x) c h w")
+        print(input_images.shape)
         image_embeddings = self.image_encoder(input_images)
 
         outputs = []

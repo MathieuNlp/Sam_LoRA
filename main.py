@@ -10,22 +10,19 @@ from tqdm import tqdm
 from statistics import mean
 import torch
 from torch.nn.functional import threshold, normalize
-from transformers import SamProcessor
+from src.processor import Samprocessor
 
 dataset_path = "./bottle_glass_dataset"
-transform = transforms.Compose([
-             transforms.CenterCrop(1024)
-        ])
 
-processor = SamProcessor.from_pretrained("facebook/sam-vit-base")
-dataset = DatasetSegmentation(dataset_path, processor, transform)
+sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
+sam_lora = LoRA_sam(sam,4)  
+processor = Samprocessor(sam_lora.sam)
+dataset = DatasetSegmentation(dataset_path, processor)
+
+dataset = DatasetSegmentation(dataset_path, processor)
 #utils.plot_image_mask_dataset(dataset, 3)
 
 train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
-
-sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
-sam_lora = LoRA_sam(sam,4)
-
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
@@ -40,10 +37,8 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      # forward pass
-      outputs = model(image=batch["pixel_values"].to(device),
-                      boxes=batch["input_boxes"].to(device),
-                      multimask_output=False)
+      
+      outputs = model(batch, multimask_output=False)
 
       # compute loss
       predicted_masks = outputs.pred_masks.squeeze(1)

@@ -49,6 +49,7 @@ class ResizeLongestSide:
         Expects a numpy array shape Bx4. Requires the original image size
         in (H, W) format.
         """
+        #boxes = self.apply_coords(boxes.reshape(-1, 2, 2), original_size)
         boxes = self.apply_coords(boxes.reshape(-1, 2, 2), original_size)
         return boxes.reshape(-1, 4)
 
