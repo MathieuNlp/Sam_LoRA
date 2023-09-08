@@ -43,19 +43,51 @@ class DatasetSegmentation(Dataset):
             img_path = self.img_files[index]
             mask_path = self.mask_files[index]
             # get image and mask in PIL format
+
             image =  Image.open(img_path)
             mask = Image.open(mask_path)
             mask = mask.convert('1')
             original_size = tuple(image.size)
-            if self.transform_image or self.transform_mask:
-                 image = self.transform_image(image)
-                 mask = self.transform_mask(mask)
             ground_truth_mask =  np.array(mask)
 
             # get bounding box prompt
             box = utils.get_bounding_box(ground_truth_mask)
             inputs = self.processor(image, original_size, prompt=box)
             inputs["ground_truth_mask"] = ground_truth_mask
+            inputs["pil_img"] = image
+            inputs["pil_msk"] = mask
 
             return inputs
     
+
+
+class TestDatasetSegmentation(Dataset):
+
+    def __init__(self, folder_path):
+        super().__init__()
+        # data processor of images bedore inputing into the SAM model
+        # get image and mask paths
+        self.img_files = glob.glob(os.path.join(folder_path,'images','*.jpg'))
+
+        self.mask_files = []
+        for img_path in self.img_files:
+             self.mask_files.append(os.path.join(folder_path,'masks', os.path.basename(img_path)[:-4] + ".tiff")) 
+
+    def __len__(self):
+        return len(self.img_files)
+    
+    def __getitem__(self, index):
+            img_path = self.img_files[index]
+            mask_path = self.mask_files[index]
+            # get image and mask in PIL format
+
+            image =  Image.open(img_path)
+            mask = Image.open(mask_path)
+            mask = mask.convert('1')
+            ground_truth_mask =  np.array(mask)
+            box = utils.get_bounding_box(ground_truth_mask)
+            nd_img = np.array(image)
+
+            
+
+            return np.array(image), ground_truth_mask, np.array(box)

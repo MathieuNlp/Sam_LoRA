@@ -8,27 +8,26 @@ from torch.optim import Adam
 from torch.nn.functional import threshold, normalize
 
 import src.utils as utils
-from src.dataloader import DatasetSegmentation
-from src.dataloader import collate_fn
+from src.dataloader import TestDatasetSegmentation
 
 from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
-
+import einops
+from einops import rearrange
 dataset_path = "./bottle_glass_dataset"
+
+ds = TestDatasetSegmentation(dataset_path)
+train_dataloader = DataLoader(ds, batch_size=1)
 
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
 sam_lora = LoRA_sam(sam,4)  
 model = sam_lora.sam
-processor = Samprocessor(model)
-dataset = DatasetSegmentation(dataset_path, processor)
-#utils.plot_image_mask_dataset(dataset, 3)
 
-train_dataloader = DataLoader(dataset, batch_size=2)
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
-num_epochs = 2
+num_epochs = 20
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -38,17 +37,26 @@ model.train()
 
 for epoch in range(num_epochs):
     epoch_losses = []
-    for image, mask in tqdm(train_dataloader):
+    for image, mask, box in tqdm(train_dataloader):
       # inv_batch = utils.dict_list_inversion(batch)
       # outputs = model(batched_input=inv_batch,
       #       multimask_output=False)
       sampred = SamPredictor(model)
-      sampred.set_image()
-      # compute loss
-      predicted_masks = outputs.pred_masks.squeeze(1)
-      ground_truth_masks = batch["ground_truth_mask"].float().to(device)
-      loss = seg_loss(predicted_masks, ground_truth_masks.unsqueeze(1))
+      image = rearrange(image, "x h w c -> h w (c x)")
+      image = image.numpy()
+      box = box.numpy()
 
+               
+      sampred.set_image(image)
+      outputs = sampred.predict(box=box,
+                            multimask_output=False)
+      # compute loss
+      predicted_masks = outputs[0]
+
+      ground_truth_masks = mask.float().to(device)
+
+      loss = seg_loss(torch.from_numpy(predicted_masks).float().to(device), ground_truth_masks)
+      loss.requires_grad = True
       # backward pass (compute gradients of parameters w.r.t. loss)
       optimizer.zero_grad()
       loss.backward()

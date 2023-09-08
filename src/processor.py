@@ -65,11 +65,14 @@ class Samprocessor:
     def process_image(self, image, original_size):
         nd_image = np.array(image)
         input_image= self.transform.apply_image(nd_image)
+
         input_image_torch = torch.as_tensor(input_image, device=self.device)
         input_image_torch = input_image_torch.permute(2, 0, 1).contiguous()[None, :, :, :]
-        input = self.set_torch_image(input_image_torch, original_size)
+        #input = self.set_torch_image(input_image_torch, original_size)
+        self.is_image_set = True
+        self.original_size = original_size
 
-        return input
+        return input_image_torch
 
     def process_prompt(self, box):
         # We only use boxes

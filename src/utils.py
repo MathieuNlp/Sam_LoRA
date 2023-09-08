@@ -60,7 +60,9 @@ def dict_list_inversion(dict):
     for k in range (n):
         d = {"image":  dict["image"][k], 
              "original_size":dict["original_size"][k],
-             "boxes": dict["boxes"][k]}
+             "boxes": dict["boxes"][k]
+             }
+
         
         res.append(d)
     return res
