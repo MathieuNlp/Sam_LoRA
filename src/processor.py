@@ -21,7 +21,6 @@ class Samprocessor:
             raise RuntimeError("An image must be set with .set_image(...) before mask prediction.")
         # Transform input prompts
         box_torch = self.process_prompt(prompt, original_size)
-
         inputs = {"image": image_torch, 
                   "original_size": original_size,
                  "boxes": box_torch}
@@ -31,11 +30,16 @@ class Samprocessor:
 
     def process_image(self, image, original_size):
         nd_image = np.array(image)
+        #print("nd_image", nd_image.shape)
         input_image = self.transform.apply_image(nd_image)
+        #print("input_image", input_image.shape)
         input_image_torch = torch.as_tensor(input_image, device=self.device)
+        #print("input_image_torch", input_image_torch.shape)
         input_image_torch = input_image_torch.permute(2, 0, 1).contiguous()[None, :, :, :]
-        #self.set_torch_image(input_image_torch, original_size)
-        return input_image_torch
+        processed_image = self.model.preprocess(input_image_torch) 
+        self.is_image_set = True
+
+        return processed_image
 
     def process_prompt(self, box, original_size):
         # We only use boxes

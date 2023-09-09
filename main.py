@@ -8,8 +8,7 @@ from torch.optim import Adam
 from torch.nn.functional import threshold, normalize
 
 import src.utils as utils
-from src.dataloader import DatasetSegmentation
-
+from src.dataloader import DatasetSegmentation, collate_fn
 from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
@@ -23,7 +22,7 @@ processor = Samprocessor(model)
 dataset = DatasetSegmentation(dataset_path, processor)
 #utils.plot_image_mask_dataset(dataset, 3)
 
-train_dataloader = DataLoader(dataset, batch_size=2)
+train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
@@ -38,8 +37,8 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      inv_batch = utils.dict_list_inversion(batch)
-      outputs = model(batched_input=inv_batch,
+      batch = [batch[0][0], batch[1][0]]
+      outputs = model(batched_input=batch,
             multimask_output=False)
 
       # compute loss

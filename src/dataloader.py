@@ -29,13 +29,7 @@ class DatasetSegmentation(Dataset):
              self.mask_files.append(os.path.join(folder_path,'masks', os.path.basename(img_path)[:-4] + ".tiff")) 
 
         self.processor = processor
-        # self.transform_image = transforms.Compose([
-        #       transforms.Resize((1024,1024))
-        # ])
 
-        # self.transform_mask = transforms.Compose([
-        #       transforms.Resize((256,256))
-        # ])
     def __len__(self):
         return len(self.img_files)
     
@@ -52,10 +46,8 @@ class DatasetSegmentation(Dataset):
     
             # get bounding box prompt
             box = utils.get_bounding_box(ground_truth_mask)
-            inputs = self.processor(image, original_size, prompt=box)
+            inputs = self.processor(image, original_size, box)
             inputs["ground_truth_mask"] = ground_truth_mask
-            inputs["pil_img"] = image
-            inputs["pil_msk"] = mask
 
             return inputs
     
@@ -91,3 +83,7 @@ class TestDatasetSegmentation(Dataset):
             
 
             return np.array(image), ground_truth_mask, np.array(box)
+    
+def collate_fn(data):
+    zipped = zip(data)
+    return list(zipped)
