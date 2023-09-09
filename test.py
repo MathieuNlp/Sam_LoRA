@@ -18,7 +18,7 @@ from einops import rearrange
 dataset_path = "./bottle_glass_dataset"
 
 ds = TestDatasetSegmentation(dataset_path)
-train_dataloader = DataLoader(ds, batch_size=1)
+train_dataloader = DataLoader(ds, batch_size=2)
 
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
 sam_lora = LoRA_sam(sam,4)  

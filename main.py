@@ -9,7 +9,6 @@ from torch.nn.functional import threshold, normalize
 
 import src.utils as utils
 from src.dataloader import DatasetSegmentation
-from src.dataloader import collate_fn
 
 from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
@@ -38,12 +37,11 @@ model.train()
 
 for epoch in range(num_epochs):
     epoch_losses = []
-    for image, mask in tqdm(train_dataloader):
-      # inv_batch = utils.dict_list_inversion(batch)
-      # outputs = model(batched_input=inv_batch,
-      #       multimask_output=False)
-      sampred = SamPredictor(model)
-      sampred.set_image()
+    for batch in tqdm(train_dataloader):
+      inv_batch = utils.dict_list_inversion(batch)
+      outputs = model(batched_input=inv_batch,
+            multimask_output=False)
+
       # compute loss
       predicted_masks = outputs.pred_masks.squeeze(1)
       ground_truth_masks = batch["ground_truth_mask"].float().to(device)

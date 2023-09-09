@@ -19,9 +19,8 @@ dataset_path = "./bottle_glass_dataset"
 class DatasetSegmentation(Dataset):
 
     def __init__(self, folder_path, processor):
-        super(DatasetSegmentation, self).__init__()
+        super().__init__()
         # data processor of images bedore inputing into the SAM model
-        self.processor = processor
         # get image and mask paths
         self.img_files = glob.glob(os.path.join(folder_path,'images','*.jpg'))
 
@@ -29,13 +28,14 @@ class DatasetSegmentation(Dataset):
         for img_path in self.img_files:
              self.mask_files.append(os.path.join(folder_path,'masks', os.path.basename(img_path)[:-4] + ".tiff")) 
 
-        self.transform_image = transforms.Compose([
-              transforms.Resize((1024,1024))
-        ])
+        self.processor = processor
+        # self.transform_image = transforms.Compose([
+        #       transforms.Resize((1024,1024))
+        # ])
 
-        self.transform_mask = transforms.Compose([
-              transforms.Resize((256,256))
-        ])
+        # self.transform_mask = transforms.Compose([
+        #       transforms.Resize((256,256))
+        # ])
     def __len__(self):
         return len(self.img_files)
     
@@ -43,13 +43,13 @@ class DatasetSegmentation(Dataset):
             img_path = self.img_files[index]
             mask_path = self.mask_files[index]
             # get image and mask in PIL format
-
             image =  Image.open(img_path)
             mask = Image.open(mask_path)
             mask = mask.convert('1')
-            original_size = tuple(image.size)
             ground_truth_mask =  np.array(mask)
 
+            original_size = tuple(image.size)
+    
             # get bounding box prompt
             box = utils.get_bounding_box(ground_truth_mask)
             inputs = self.processor(image, original_size, prompt=box)
