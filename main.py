@@ -26,7 +26,7 @@ train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=co
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
-num_epochs = 2
+num_epochs = 10
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -42,7 +42,6 @@ for epoch in range(num_epochs):
             multimask_output=False)
 
       # compute loss
-      print(predicted_masks)
       predicted_masks = outputs.pred_masks.squeeze(1)
       ground_truth_masks = batch["ground_truth_mask"].float().to(device)
       loss = seg_loss(predicted_masks, ground_truth_masks.unsqueeze(1))
