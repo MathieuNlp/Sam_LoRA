@@ -37,7 +37,7 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      batch_dict = [batch[k][0] for k in range (len(batch))]
+      batch_dict = [batch[0][0], batch[1][0]]
       outputs = model(batched_input=batch,
             multimask_output=False)
 
