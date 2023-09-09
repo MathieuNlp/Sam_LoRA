@@ -42,7 +42,8 @@ for epoch in range(num_epochs):
             multimask_output=False)
 
       # compute loss
-      predicted_masks = outputs.pred_masks.squeeze(1)
+      print(outputs.shape)
+      predicted_masks = outputs.squeeze(1)
       ground_truth_masks = batch["ground_truth_mask"].float().to(device)
       loss = seg_loss(predicted_masks, ground_truth_masks.unsqueeze(1))
 
