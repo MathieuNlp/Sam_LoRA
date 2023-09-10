@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms
 from torch.optim import Adam
 from torch.nn.functional import threshold, normalize
-
+from torchvision.utils import save_image
 import src.utils as utils
 from src.dataloader import DatasetSegmentation, collate_fn
 from src.processor import Samprocessor
@@ -60,10 +60,8 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         mask_pred_pil = transforms.ToPILImage()(outputs[0]["masks"])
-         mask_pred_pil.save("tst.jpg")
+         save_image(ground_truth_masks, "test.jpg")
          
-
 
     print(f'EPOCH: {epoch}')
     print(f'Mean loss: {mean(epoch_losses)}')
