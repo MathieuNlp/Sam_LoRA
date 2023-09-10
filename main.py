@@ -47,9 +47,10 @@ for epoch in range(num_epochs):
 
       #predicted_masks = outputs.masks.squeeze(1)
       ground_truth_masks = batch_inputs[0]["ground_truth_mask"].float().to(device)
-      ground_truth_masks = ground_truth_masks.contiguous()[None, :, :]
+      ground_truth_masks = ground_truth_masks.contiguous()[None, None, :, :]
+      ground_truth_masks = rearrange(ground_truth_masks, "b x w h -> b x h w")
       print(gt_outputs_mask.shape, ground_truth_masks.shape)
-      loss = seg_loss(gt_outputs_mask, ground_truth_masks)
+      loss = seg_loss(gt_outputs_mask, ground_truth_masks[0])
 
       # backward pass (compute gradients of parameters w.r.t. loss)
       optimizer.zero_grad()
