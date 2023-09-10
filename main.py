@@ -22,7 +22,7 @@ processor = Samprocessor(model)
 dataset = DatasetSegmentation(dataset_path, processor)
 #utils.plot_image_mask_dataset(dataset, 3)
 
-train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
+train_dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=collate_fn)
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
@@ -37,7 +37,7 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      batch_inputs = [batch[0][0], batch[1][0]]
+      batch_inputs = [batch[0][0]]
       outputs = model(batched_input=batch_inputs,
             multimask_output=False)
 
