@@ -60,9 +60,7 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         image = transforms.ToPILImage()(outputs[0]["masks"].squeeze(1).float())
-         print(ground_truth_masks.shape)
-         save_image(ground_truth_masks, "/plots/pred_mask.jpg")
+         save_image( outputs[0]["masks"].squeeze(1).float(),  "/plots/pred_mask.jpg")
          
 
     print(f'EPOCH: {epoch}')
