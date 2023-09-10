@@ -26,7 +26,7 @@ dataset = DatasetSegmentation(dataset_path, processor)
 train_dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=collate_fn)
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
-seg_loss.requires_grad = True
+torch.set_grad_enabled(True)
 num_epochs = 10
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
