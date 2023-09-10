@@ -50,7 +50,7 @@ for epoch in range(num_epochs):
       ground_truth_masks = ground_truth_masks[None, :, :].contiguous()
       ground_truth_masks = torch.permute(ground_truth_masks, (0, 2, 1)).to(device)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks)
-
+      loss = torch.Variable(loss, requires_grad = True)
       # backward pass (compute gradients of parameters w.r.t. loss)
       optimizer.zero_grad()
       
