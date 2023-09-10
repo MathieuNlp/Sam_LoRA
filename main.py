@@ -12,6 +12,7 @@ from src.dataloader import DatasetSegmentation, collate_fn
 from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
+from einops import rearrange
 
 dataset_path = "./bottle_glass_dataset"
 
@@ -45,7 +46,7 @@ for epoch in range(num_epochs):
       gt_outputs_mask = outputs[0]["masks"]
       #predicted_masks = outputs.masks.squeeze(1)
       ground_truth_masks = batch_inputs[0]["ground_truth_mask"].float() 
-
+      ground_truth_masks = rearrange(ground_truth_masks, "h w -> b h h w", b=1, h=1)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)
