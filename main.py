@@ -45,7 +45,6 @@ for epoch in range(num_epochs):
       print(batch_inputs)
       gt_outputs_mask = [out["masks"].squeeze(1) for out in outputs]
       #predicted_masks = outputs.masks.squeeze(1)
-      print(batch_inputs["ground_truth_mask"])
       ground_truth_masks = [elt["ground_truth_mask"].float() for elt in batch_inputs].to(device)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks.unsqueeze(1))
 
