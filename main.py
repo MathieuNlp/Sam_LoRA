@@ -28,7 +28,6 @@ optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 torch.set_grad_enabled(True)
 num_epochs = 150
-seg_loss.requires_grad = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 model.to(device)
@@ -46,12 +45,13 @@ for epoch in range(num_epochs):
       gt_outputs_mask = outputs[0]["masks"].squeeze(1).float().to(device)
       #predicted_masks = outputs.masks.squeeze(1)
       ground_truth_masks = batch_inputs[0]["ground_truth_mask"]
+      
       ground_truth_masks = ground_truth_masks[None, :, :].contiguous()
       ground_truth_masks = torch.permute(ground_truth_masks, (0, 2, 1)).to(device)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)
-      #loss.requires_grad = True
+      loss.requires_grad = True
       optimizer.zero_grad()
 
       loss.backward()
@@ -59,6 +59,10 @@ for epoch in range(num_epochs):
       # optimize
       optimizer.step()
       epoch_losses.append(loss.item())
+      if epoch == 1 :
+         mask_pred_pil = transforms.ToPILImage(outputs[0]["masks"])
+         mask_pred_pil.save("./tst.png")
+         
 
 
     print(f'EPOCH: {epoch}')
