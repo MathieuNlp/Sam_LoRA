@@ -38,8 +38,8 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      batch_inputs = batch[0][0]
-      outputs = model(batched_input=[batch_inputs],
+      batch_inputs = [batch[0][0]]
+      outputs = model(batched_input=batch_inputs,
             multimask_output=False)
 
       # compute loss
