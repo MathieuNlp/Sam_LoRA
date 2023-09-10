@@ -60,7 +60,7 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         mask_pred_pil = transforms.ToPILImage(outputs[0]["masks"])
+         mask_pred_pil = transforms.ToPILImage()(outputs[0]["masks"])
          mask_pred_pil.save("tst.jpg")
          
 
