@@ -52,10 +52,9 @@ for epoch in range(num_epochs):
       loss = seg_loss(gt_outputs_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)
+      loss.requires_grad = True
       optimizer.zero_grad()
-      print(loss.grad_fn)
-      print(loss.is_leaf)
-      print(loss.grad)
+
       loss.backward()
 
       # optimize
