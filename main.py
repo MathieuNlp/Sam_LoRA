@@ -61,7 +61,7 @@ for epoch in range(num_epochs):
       epoch_losses.append(loss.item())
       if epoch == 1 :
          mask_pred_pil = transforms.ToPILImage(outputs[0]["masks"])
-         mask_pred_pil.save("./tst.png")
+         mask_pred_pil.save("tst.jpg")
          
 
 
