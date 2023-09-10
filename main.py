@@ -60,7 +60,8 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         save_image(ground_truth_masks, "test.jpg")
+         print(ground_truth_masks.shape)
+         save_image(ground_truth_masks, "/plots/test.jpg")
          
 
     print(f'EPOCH: {epoch}')
