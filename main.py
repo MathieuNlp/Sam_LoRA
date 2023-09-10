@@ -60,7 +60,7 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         save_image( outputs[0]["masks"].squeeze(1).float(),  "/plots/pred_mask.jpg")
+         save_image( outputs[0]["masks"].squeeze(1).float(),  "./plots/pred_mask.jpg")
          
 
     print(f'EPOCH: {epoch}')
