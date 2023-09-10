@@ -155,7 +155,6 @@ class Sam(nn.Module):
             is given by original_size.
         """
 
-        print(masks.shape, )
         masks = F.interpolate(
             masks,
             (self.image_encoder.img_size, self.image_encoder.img_size),
