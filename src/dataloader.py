@@ -79,6 +79,7 @@ class TestDatasetSegmentation(Dataset):
             ground_truth_mask =  np.array(mask)
             box = utils.get_bounding_box(ground_truth_mask)
             nd_img = np.array(image)
+            
 
             return np.array(image), ground_truth_mask, np.array(box)
     
