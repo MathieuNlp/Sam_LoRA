@@ -47,7 +47,7 @@ class DatasetSegmentation(Dataset):
             # get bounding box prompt
             box = utils.get_bounding_box(ground_truth_mask)
             inputs = self.processor(image, original_size, box)
-            inputs["ground_truth_mask"] = torch.from_numpy(ground_truth_mask)
+            inputs["ground_truth_mask"] = ground_truth_mask
 
             return inputs
     
@@ -79,7 +79,7 @@ class TestDatasetSegmentation(Dataset):
             ground_truth_mask =  np.array(mask)
             box = utils.get_bounding_box(ground_truth_mask)
             nd_img = np.array(image)
-            
+
 
             return np.array(image), ground_truth_mask, np.array(box)
     
