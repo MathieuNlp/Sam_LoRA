@@ -42,10 +42,10 @@ for epoch in range(num_epochs):
             multimask_output=False)
 
       # compute loss
-      gt_outputs_mask = [out["masks"].squeeze(1) for out in outputs]
+      gt_outputs_mask = [out["masks"] for out in outputs]
       #predicted_masks = outputs.masks.squeeze(1)
-      ground_truth_masks = [elt["ground_truth_mask"].float() for elt in batch_inputs].to(device)
-      loss = seg_loss(gt_outputs_mask, ground_truth_masks.unsqueeze(1))
+      ground_truth_masks = [elt["ground_truth_mask"].float() for elt in batch_inputs]
+      loss = seg_loss(gt_outputs_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)
       optimizer.zero_grad()
