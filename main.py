@@ -46,9 +46,9 @@ for epoch in range(num_epochs):
       gt_outputs_mask = outputs[0]["masks"].to(device)
 
       #predicted_masks = outputs.masks.squeeze(1)
-      ground_truth_masks = batch_inputs[0]["ground_truth_mask"].float().to(device)
+      ground_truth_masks = batch_inputs[0]["ground_truth_mask"]
       ground_truth_masks = ground_truth_masks[None, None, :, :]
-      ground_truth_masks = torch.permute(ground_truth_masks, (0, 1, 3, 2))
+      ground_truth_masks = torch.permute(ground_truth_masks, (0, 1, 3, 2)).float().to(device)
       print(ground_truth_masks.shape, gt_outputs_mask.shape)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks)
 
