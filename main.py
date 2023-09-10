@@ -44,7 +44,7 @@ for epoch in range(num_epochs):
 
       # compute loss
       gt_outputs_mask = outputs[0]["masks"].float().to(device)
-
+      print(gt_outputs_mask.shape)
       #predicted_masks = outputs.masks.squeeze(1)
       ground_truth_masks = batch_inputs[0]["ground_truth_mask"]
       ground_truth_masks = ground_truth_masks[None, None, :, :]
