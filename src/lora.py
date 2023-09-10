@@ -73,6 +73,13 @@ class LoRA_sam(nn.Module):
             w_b_linear_q = nn.Linear(self.rank, self.d_model)
             w_a_linear_v = nn.Linear(self.d_model, self.rank)
             w_b_linear_v = nn.Linear(self.rank, self.d_model)
+            
+            w_a_linear_q.requires_grad_()
+            w_b_linear_q.requires_grad_()
+            w_a_linear_v.requires_grad_()
+            w_b_linear_v.requires_grad_()
+
+
 
             self.A_weights.append(w_a_linear_q)
             self.B_weights.append(w_b_linear_q)
