@@ -43,12 +43,12 @@ for epoch in range(num_epochs):
             multimask_output=False)
 
       # compute loss
-      gt_outputs_mask = outputs[0]["masks"].squeeze(1).to(device)
+      gt_outputs_mask = outputs[0]["masks"].squeeze(1).float().to(device)
       print(gt_outputs_mask.shape)
       #predicted_masks = outputs.masks.squeeze(1)
       ground_truth_masks = batch_inputs[0]["ground_truth_mask"]
       ground_truth_masks = ground_truth_masks[None, :, :].contiguous()
-      ground_truth_masks = torch.permute(ground_truth_masks, (0, 2, 1)).float().to(device)
+      ground_truth_masks = torch.permute(ground_truth_masks, (0, 2, 1)).to(device)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)
