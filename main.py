@@ -42,6 +42,7 @@ for epoch in range(num_epochs):
             multimask_output=False)
 
       # compute loss
+      print(batch_inputs)
       gt_outputs_mask = [out["masks"].squeeze(1) for out in outputs]
       #predicted_masks = outputs.masks.squeeze(1)
       print(batch_inputs["ground_truth_mask"])
