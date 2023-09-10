@@ -54,7 +54,7 @@ for epoch in range(num_epochs):
       # backward pass (compute gradients of parameters w.r.t. loss)
       optimizer.zero_grad()
       
-      loss.backward(retain_graph=True))
+      loss.backward(retain_graph=True)
 
       # optimize
       optimizer.step()
