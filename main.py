@@ -37,14 +37,14 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      batch = [batch[0][0], batch[1][0]]
-      outputs = model(batched_input=batch,
+      batch_inputs = [batch[0][0], batch[1][0]]
+      outputs = model(batched_input=batch_inputs,
             multimask_output=False)
 
       # compute loss
       gt_outputs_mask = [out["masks"].squeeze(1) for out in outputs]
       #predicted_masks = outputs.masks.squeeze(1)
-      print(batch["ground_truth_mask"])
+      print(batch_inputs["ground_truth_mask"])
       ground_truth_masks = [elt[0].float() for elt in batch["ground_truth_mask"]].to(device)
       loss = seg_loss(gt_outputs_mask, ground_truth_masks.unsqueeze(1))
 
