@@ -30,11 +30,8 @@ class Samprocessor:
 
     def process_image(self, image, original_size):
         nd_image = np.array(image)
-        #print("nd_image", nd_image.shape)
         input_image = self.transform.apply_image(nd_image)
-        #print("input_image", input_image.shape)
         input_image_torch = torch.as_tensor(input_image, device=self.device)
-        #print("input_image_torch", input_image_torch.shape)
         input_image_torch = input_image_torch.permute(2, 0, 1).contiguous()[None, :, :, :]
         processed_image = self.model.preprocess(input_image_torch) 
         self.is_image_set = True
