@@ -13,7 +13,7 @@ from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
 from einops import rearrange
-
+import matplotlib.pyplot as plt
 dataset_path = "./bottle_glass_dataset"
 
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
@@ -60,7 +60,9 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         save_image( outputs[0]["masks"].squeeze(1).float(),  "./plots/pred_mask.jpg")
+         mask_predicted = outputs[0]["masks"]
+         plt.imshow(mask_predicted)
+         plt.savefig("mask_pred.jpg")
          
 
     print(f'EPOCH: {epoch}')
