@@ -60,7 +60,7 @@ for epoch in range(num_epochs):
       optimizer.step()
       epoch_losses.append(loss.item())
       if epoch == 1 :
-         mask_predicted = outputs[0]["masks"]
+         mask_predicted = outputs[0]["masks"].squeeze(1)
          plt.plot(mask_predicted)
          plt.savefig("mask_pred.jpg")
          
