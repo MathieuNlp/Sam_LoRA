@@ -61,7 +61,7 @@ for epoch in range(num_epochs):
       epoch_losses.append(loss.item())
       if epoch == 1 :
          mask_predicted = outputs[0]["masks"]
-         plt.imshow(mask_predicted)
+         plt.plot(mask_predicted)
          plt.savefig("mask_pred.jpg")
          
 
