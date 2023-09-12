@@ -54,9 +54,13 @@ def get_bounding_box(ground_truth_map):
   return bbox
 
 def batch_to_tensor_mask(batch):
-    stacked_masks = batch[0]["ground_truth_mask"]
-    for elt in batch[1:]:
-        stacked_masks = torch.cat([stacked_masks, elt["ground_truth_mask"]], dim=0)
-    return stacked_masks
 
-    
+    list_msk = []
+    for elt in batch:
+        elt["ground_truth_mask"] = elt["ground_truth_mask"][None, :, :]
+        list_msk.append( elt["ground_truth_mask"])
+        print(elt["ground_truth_mask"].shape)
+    stk_msk = torch.stack(list_msk, dim=0)
+    return stk_msk
+
+        
