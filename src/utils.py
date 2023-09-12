@@ -53,16 +53,12 @@ def get_bounding_box(ground_truth_map):
 
   return bbox
 
-def dict_list_inversion(dict):
-    # Function that is only for the dict(list) in batched from the dataloader so that it transforms it into list(dict) for sam
-    res = []
-    n = dict["image"].shape[0]
-    for k in range (n):
-        d = {"image":  dict["image"][k], 
-             "original_size":dict["original_size"][k],
-             "boxes": dict["boxes"][k]
-             }
+def batch_to_tensor(batch):
+    empty = torch.tensor([])
+    for elt in batch:
+        torch.stack()
 
-        
-        res.append(d)
-    return res
+
+
+
+    

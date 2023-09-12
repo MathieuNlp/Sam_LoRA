@@ -14,6 +14,7 @@ from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
 from einops import rearrange
 import matplotlib.pyplot as plt
+
 dataset_path = "./bottle_glass_dataset"
 
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
@@ -23,31 +24,24 @@ processor = Samprocessor(model)
 dataset = DatasetSegmentation(dataset_path, processor)
 #utils.plot_image_mask_dataset(dataset, 3)
 
-train_dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=collate_fn)
+train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
-torch.set_grad_enabled(True)
-num_epochs = 150
+
+num_epochs = 1
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-model.to(device)
+#model.to(device)
 model.train()
 
 
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      batch_inputs = [batch[0][0]]
-      outputs = model(batched_input=batch_inputs,
+
+      outputs = model(batched_input=batch,
             multimask_output=False)
 
-      # compute loss
-      pred_mask = outputs[0]["masks"].squeeze(1).float().to(device)
-      #predicted_masks = outputs.masks.squeeze(1)
-      ground_truth_masks = batch_inputs[0]["ground_truth_mask"]
-      
-      ground_truth_masks = ground_truth_masks[None, :, :].contiguous()
-      ground_truth_masks = torch.permute(ground_truth_masks, (0, 2, 1)).to(device)
       loss = seg_loss(pred_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)
@@ -59,10 +53,6 @@ for epoch in range(num_epochs):
       # optimize
       optimizer.step()
       epoch_losses.append(loss.item())
-      if epoch == 1 :
-         mask_predicted = outputs[0]["masks"].squeeze(1).squeeze(0).cpu()
-         plt.plot(mask_predicted)
-         plt.savefig("mask_pred.jpg")
          
 
     print(f'EPOCH: {epoch}')
