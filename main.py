@@ -38,10 +38,9 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-
       outputs = model(batched_input=batch,
             multimask_output=False)
-
+      print("PASSED PREDS")
       loss = seg_loss(pred_mask, ground_truth_masks)
 
       # backward pass (compute gradients of parameters w.r.t. loss)

@@ -4,7 +4,7 @@ import PIL
 from PIL import Image
 from torchvision import datasets, transforms
 import torchvision.transforms.functional as F
-
+import torch
 
 def show_mask(mask, ax, random_color=False):
     if random_color:
@@ -53,12 +53,10 @@ def get_bounding_box(ground_truth_map):
 
   return bbox
 
-def batch_to_tensor(batch):
-    empty = torch.tensor([])
-    for elt in batch:
-        torch.stack()
-
-
-
+def batch_to_tensor_mask(batch):
+    stacked_masks = batch[0]["ground_truth_mask"]
+    for elt in batch[1:]:
+        stacked_masks = torch.cat([stacked_masks, elt["ground_truth_mask"]], dim=0)
+    return stacked_masks
 
     
