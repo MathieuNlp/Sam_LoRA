@@ -38,10 +38,13 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
+      max_h, max_w = utils.get_max_size(batch)
       outputs = model(batched_input=batch,
             multimask_output=False)
-      utils.batch_to_tensor_mask(batch)
-      loss = seg_loss(pred_mask, ground_truth_masks)
+      list_gt_msk, list_pred_msk = utils.get_list_masks(batch, outputs)
+      stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
+      #utils.batch_to_tensor_mask(batch)
+      loss = seg_loss(stk_gt_msk.float(), stk_pred_msk.float())
 
       # backward pass (compute gradients of parameters w.r.t. loss)
       loss.requires_grad = True

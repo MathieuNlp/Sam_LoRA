@@ -5,7 +5,8 @@ from PIL import Image
 from torchvision import datasets, transforms
 import torchvision.transforms.functional as F
 import torch
-
+from torch.nn.utils.rnn import pad_sequence
+from torch.nn.functional import pad
 def show_mask(mask, ax, random_color=False):
     if random_color:
         color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)
@@ -53,13 +54,41 @@ def get_bounding_box(ground_truth_map):
 
   return bbox
 
-def batch_to_tensor_mask(batch):
-    for elt in batch:
-        elt["ground_truth_mask"] = elt["ground_truth_mask"][None, :, :]
-        print(elt["ground_truth_mask"].shape)
-    test = torch.cat((batch[0]["ground_truth_mask"], batch[1]["ground_truth_mask"]), dim=2)
-    print(test.shape)
 
+def get_list_masks(batch, preds):
+    list_gt_msk = []
+    list_pred_msk = []
+    for k in range (len(batch)):
+        list_gt_msk.append(batch[k]["ground_truth_mask"])
+        list_pred_msk.append(preds[k]["masks"].squeeze(0).squeeze(0))
+    return list_gt_msk, list_pred_msk
+
+
+def get_max_size(batch):
+    max_size_w = 0
+    max_size_h = 0
+    for elt in batch:
+        if elt["ground_truth_mask"].shape[1] > max_size_w:
+            max_size_w =  elt["ground_truth_mask"].shape[1]
+        if elt["ground_truth_mask"].shape[0] > max_size_h:
+            max_size_h =  elt["ground_truth_mask"].shape[0]
+            
+    return max_size_h, max_size_w
+
+
+def pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w):
+    for k in range(len(list_gt_msk)):
         
-def pad_tensor_from_batch(batch):
+        list_gt_msk[k] = pad(list_gt_msk[k], pad=(max_w-list_gt_msk[k].shape[1], 0, 0, max_h-list_gt_msk[k].shape[0]))
+        list_pred_msk[k] =  pad(list_pred_msk[k], pad=(max_w-list_pred_msk[k].shape[1], 0, 0, max_h-list_pred_msk[k].shape[0]))
+
+    stk_gt_msk = torch.stack(list_gt_msk, dim=0)
+    stk_pred_msk = torch.stack(list_pred_msk, dim=0)
+
+    print(stk_gt_msk.shape, stk_pred_msk.shape)
+    return stk_gt_msk, stk_pred_msk
+
+
+
+
     
