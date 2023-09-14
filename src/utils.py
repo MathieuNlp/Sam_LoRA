@@ -101,3 +101,4 @@ def tensor_to_image(gt_masks, pred_msks):
         axarr[0, i].imshow(gt_msk[:, :])
         axarr[1, i].imshow(pred_msk[:, :])
     plt.savefig("./plots/comparaison.png")
+
