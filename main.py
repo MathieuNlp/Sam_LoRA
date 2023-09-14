@@ -28,7 +28,7 @@ train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=co
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
-num_epochs = 25
+num_epochs = 1
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 #model.to(device)
@@ -41,8 +41,11 @@ for epoch in range(num_epochs):
       max_h, max_w = utils.get_max_size(batch)
       outputs = model(batched_input=batch,
             multimask_output=False)
+      
       list_gt_msk, list_pred_msk = utils.get_list_masks(batch, outputs)
+      utils.tensor_to_image(list_gt_msk, list_pred_msk)
       stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
+
       #utils.batch_to_tensor_mask(batch)
       loss = seg_loss(stk_gt_msk.float(), stk_pred_msk.float())
 

@@ -7,6 +7,9 @@ import torchvision.transforms.functional as F
 import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.nn.functional import pad
+import os
+
+
 def show_mask(mask, ax, random_color=False):
     if random_color:
         color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)
@@ -61,6 +64,8 @@ def get_list_masks(batch, preds):
     for k in range (len(batch)):
         list_gt_msk.append(batch[k]["ground_truth_mask"])
         list_pred_msk.append(preds[k]["masks"].squeeze(0).squeeze(0))
+        print("GT :", list_gt_msk[-1].shape)
+        print("PRED :", list_pred_msk[-1].shape)
     return list_gt_msk, list_pred_msk
 
 
@@ -90,5 +95,9 @@ def pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w):
 
 
 
-
-    
+def tensor_to_image(gt_masks, pred_msks):
+    f, axarr = plt.subplots(2,2)
+    for i, (gt_msk, pred_msk) in enumerate(zip(gt_masks, pred_msks)):
+        axarr[0, i].imshow(gt_msk[:, :])
+        axarr[1, i].imshow(pred_msk[:, :])
+    plt.savefig("./plots/comparaison.png")
