@@ -28,7 +28,7 @@ train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=co
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
-num_epochs = 1
+num_epochs = 25
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 #model.to(device)
