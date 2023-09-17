@@ -41,8 +41,7 @@ class DatasetSegmentation(Dataset):
             mask = Image.open(mask_path)
             mask = mask.convert('1')
             ground_truth_mask =  np.array(mask)
-
-            original_size = tuple(image.size)
+            original_size = tuple(image.size)[::-1]
     
             # get bounding box prompt
             box = utils.get_bounding_box(ground_truth_mask)

@@ -38,12 +38,13 @@ model.train()
 for epoch in range(num_epochs):
     epoch_losses = []
     for batch in tqdm(train_dataloader):
-      max_h, max_w = utils.get_max_size(batch)
+      
       outputs = model(batched_input=batch,
             multimask_output=False)
       
-      list_gt_msk, list_pred_msk = utils.get_list_masks(batch, outputs)
-      utils.tensor_to_image(list_gt_msk, list_pred_msk)
+      list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
+      utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox)
+      max_h, max_w = utils.get_max_size(batch)
       stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
 
       #utils.batch_to_tensor_mask(batch)
@@ -62,3 +63,6 @@ for epoch in range(num_epochs):
 
     print(f'EPOCH: {epoch}')
     print(f'Mean loss: {mean(epoch_losses)}')
+    
+sam_lora.save_lora_parameters("lora.safetensors")
+

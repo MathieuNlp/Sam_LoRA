@@ -8,6 +8,7 @@ import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.nn.functional import pad
 import os
+from matplotlib.patches import Rectangle
 
 
 def show_mask(mask, ax, random_color=False):
@@ -61,12 +62,14 @@ def get_bounding_box(ground_truth_map):
 def get_list_masks(batch, preds):
     list_gt_msk = []
     list_pred_msk = []
+    list_bbox = []
     for k in range (len(batch)):
+        list_bbox.append(batch[k]["prompt"])
         list_gt_msk.append(batch[k]["ground_truth_mask"])
         list_pred_msk.append(preds[k]["masks"].squeeze(0).squeeze(0))
         print("GT :", list_gt_msk[-1].shape)
         print("PRED :", list_pred_msk[-1].shape)
-    return list_gt_msk, list_pred_msk
+    return list_gt_msk, list_pred_msk, list_bbox
 
 
 def get_max_size(batch):
@@ -95,9 +98,11 @@ def pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w):
 
 
 
-def tensor_to_image(gt_masks, pred_msks):
+def tensor_to_image(gt_masks, pred_msks, bboxes):
     f, axarr = plt.subplots(2,2)
-    for i, (gt_msk, pred_msk) in enumerate(zip(gt_masks, pred_msks)):
+    for i, (gt_msk, pred_msk, bbox) in enumerate(zip(gt_masks, pred_msks, bboxes)):
+        axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
         axarr[0, i].imshow(gt_msk[:, :])
         axarr[1, i].imshow(pred_msk[:, :])
     plt.savefig("./plots/comparaison.png")
+
