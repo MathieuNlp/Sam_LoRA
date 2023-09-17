@@ -4,6 +4,7 @@ from src.processor import Samprocessor
 from src.lora import LoRA_sam
 from PIL import Image
 import matplotlib.pyplot as plt
+import src.utils as utils
 
 dataset_path = "./bottle_glass_dataset"
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -21,7 +22,5 @@ original_size = tuple(image.size)[::-1]
 inputs = [processor(image, original_size, bbox)]
 outputs = sam_lora.sam(inputs, multimask_output=False)
 pred_mask = outputs[0]["masks"].squeeze(0).squeeze(0).numpy()
-f, axarr = plt.subplots(2)
-axarr[0].imshow(image)
-axarr[1].imshow(pred_mask, cmap="RdYlBu")
-plt.show()
+pred_mask_pil = Image.fromarray(pred_mask)
+utils.plot_image_mask(image, pred_mask_pil, "perfume2")

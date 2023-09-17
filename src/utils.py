@@ -21,14 +21,14 @@ def show_mask(mask, ax, random_color=False):
     ax.imshow(mask_image)
 
 
-def plot_image_mask(image, mask):
+def plot_image_mask(image, mask, filename):
     fig, axes = plt.subplots()
     axes.imshow(np.array(image))
     ground_truth_seg = np.array(mask)
     show_mask(ground_truth_seg, axes)
-    axes.title.set_text(f"Ground truth mask")
+    axes.title.set_text(f"{filename} predicted mask")
     axes.axis("off")
-    plt.savefig("./plots/gt_mask.jpg")
+    plt.savefig("./plots/" + filename + ".jpg")
     
 
 def plot_image_mask_dataset(dataset, idx):
@@ -38,7 +38,6 @@ def plot_image_mask_dataset(dataset, idx):
     mask = Image.open(mask_path)
     mask = mask.convert('1')
     plot_image_mask(image, mask)
-
 
 
 def get_bounding_box(ground_truth_map):
