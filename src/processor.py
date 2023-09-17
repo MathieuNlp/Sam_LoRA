@@ -16,14 +16,14 @@ class Samprocessor:
     def __call__(self, image, original_size, prompt):
         # Processing of the image
         image_torch = self.process_image(image, original_size)
-        # embeddings dans self.features
-        if not self.is_image_set:
-            raise RuntimeError("An image must be set with .set_image(...) before mask prediction.")
+
         # Transform input prompts
         box_torch = self.process_prompt(prompt, original_size)
+
         inputs = {"image": image_torch, 
                   "original_size": original_size,
-                 "boxes": box_torch}
+                 "boxes": box_torch,
+                 "prompt" : prompt}
         
         return inputs
 
@@ -33,15 +33,13 @@ class Samprocessor:
         input_image = self.transform.apply_image(nd_image)
         input_image_torch = torch.as_tensor(input_image, device=self.device)
         input_image_torch = input_image_torch.permute(2, 0, 1).contiguous()[None, :, :, :]
-        processed_image = self.model.preprocess(input_image_torch) 
-        self.is_image_set = True
-
-        return processed_image
+        #processed_image = self.model.preprocess(input_image_torch) 
+        return input_image_torch
 
     def process_prompt(self, box, original_size):
         # We only use boxes
         box_torch = None
-        nd_box = np.array(box)
+        nd_box = np.array(box).reshape((1,4))
         box = self.transform.apply_boxes(nd_box, original_size)
         box_torch = torch.as_tensor(box, dtype=torch.float, device=self.device)
         box_torch = box_torch[None, :]
