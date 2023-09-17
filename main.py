@@ -63,3 +63,6 @@ for epoch in range(num_epochs):
 
     print(f'EPOCH: {epoch}')
     print(f'Mean loss: {mean(epoch_losses)}')
+    
+sam_lora.save_lora_parameters("lora.safetensors")
+

@@ -389,7 +389,6 @@ class PatchEmbed(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        #x = rearrange(x, "b x c h w -> (b x) c h w", x=1)
         x = self.proj(x)
         # B C H W -> B H W C
         x = x.permute(0, 2, 3, 1)

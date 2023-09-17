@@ -113,13 +113,13 @@ class LoRA_sam(nn.Module):
         # sufix 03:d -> allows to have a name 1 instead of 001
         a_tensors = {f"w_a_{i:03d}": self.A_weights[i].weight for i in range(num_layer)}
         b_tensors = {f"w_b_{i:03d}": self.B_weights[i].weight for i in range(num_layer)}
+        #dim_in = self.lora_vit.head.in_features
+        #dim_out = self.lora_vit.head.out_features
 
-        dim_in = self.lora_vit.head.in_features
-        dim_out = self.lora_vit.head.out_features
+        #fc_tensors = {f"fc_{dim_in}in_{dim_out}out": self.lora_vit.head.weight}
 
-        fc_tensors = {f"fc_{dim_in}in_{dim_out}out": self.lora_vit.head.weight}
-
-        merged_dict = {**a_tensors, **b_tensors, **fc_tensors}
+        #merged_dict = {**a_tensors, **b_tensors, **fc_tensors}
+        merged_dict = {**a_tensors, **b_tensors}
         save_file(merged_dict, filename)
 
 
@@ -136,15 +136,15 @@ class LoRA_sam(nn.Module):
                 saved_tensor = f.get_tensor(saved_key)
                 w_B_linear.weight = nn.Parameter(saved_tensor)
 
-            dim_in = self.lora_vit.head.in_features
-            dim_out = self.lora_vit.head.out_features
-            saved_key =  f"fc_{dim_in}in_{dim_out}out"
+            #dim_in = self.lora_vit.head.in_features
+            #dim_out = self.lora_vit.head.out_features
+            #saved_key =  f"fc_{dim_in}in_{dim_out}out"
 
-            try:
-                saved_tensors = f.get_tensor(saved_key)
-                self.lora_vit.weight = nn.Parameter(saved_tensor)
-            except ValueError:
-                print("This fc weight don't fit")
+            #try:
+            #    saved_tensors = f.get_tensor(saved_key)
+            #    self.lora_vit.weight = nn.Parameter(saved_tensor)
+            #except ValueError:
+            #    print("This fc weight don't fit")
 
 
     def load_fc_parameters(self, filename):
@@ -166,3 +166,4 @@ if __name__ == "__main__":
     sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
     sam_lora = LoRA_sam(sam,4)
     #sam_lora.sam.image_encoder(torch.rand(size=(1,3,1024,1024))
+    print(sam_lora.parameters)
