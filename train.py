@@ -12,7 +12,6 @@ from src.dataloader import DatasetSegmentation, collate_fn
 from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
-from einops import rearrange
 import matplotlib.pyplot as plt
 
 dataset_path = "./bottle_glass_dataset"

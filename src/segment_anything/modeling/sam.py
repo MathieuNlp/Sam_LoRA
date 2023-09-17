@@ -13,8 +13,6 @@ from typing import Any, Dict, List, Tuple
 from .image_encoder import ImageEncoderViT
 from .mask_decoder import MaskDecoder
 from .prompt_encoder import PromptEncoder
-import einops
-from einops import rearrange
 
 class Sam(nn.Module):
     mask_threshold: float = 0.0
@@ -95,7 +93,6 @@ class Sam(nn.Module):
                 shape BxCxHxW, where H=W=256. Can be passed as mask input
                 to subsequent iterations of prediction.
         """
-
         input_images = torch.stack([self.preprocess(x["image"].squeeze(0)) for x in batched_input], dim=0)
         image_embeddings = self.image_encoder(input_images)
 

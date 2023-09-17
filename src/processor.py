@@ -1,10 +1,8 @@
-
 from src.segment_anything.utils.transforms import ResizeLongestSide
 import numpy as np
 import torch
 from typing import Optional, Tuple
-import einops
-from einops import rearrange
+
 
 class Samprocessor:
     def __init__(self, sam_model):
