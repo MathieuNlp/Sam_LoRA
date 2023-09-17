@@ -17,11 +17,24 @@ import src.utils as utils
 dataset_path = "./bottle_glass_dataset"
 
 class DatasetSegmentation(Dataset):
+    """
+    Dataset to process the images and masks
 
-    def __init__(self, folder_path, processor):
+    Arguments:
+        folder_path (str): The path of the folder containing the images
+        processor (obj): Samprocessor class that helps pre processing the image, and prompt 
+    
+    Return:
+        (dict): Dictionnary with 4 keys (image, original_size, boxes, ground_truth_mask)
+            image: image pre processed to 1024x1024 size
+            original_size: Original size of the image before pre processing
+            boxes: bouding box after adapting the coordinates of the pre processed image
+            ground_truth_mask: Ground truth mask
+    """
+
+    def __init__(self, folder_path: str, processor: Samprocessor):
         super().__init__()
-        # data processor of images bedore inputing into the SAM model
-        # get image and mask paths
+
         self.img_files = glob.glob(os.path.join(folder_path,'images','*.jpg'))
 
         self.mask_files = []
@@ -33,7 +46,7 @@ class DatasetSegmentation(Dataset):
     def __len__(self):
         return len(self.img_files)
     
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> list(dict):
             img_path = self.img_files[index]
             mask_path = self.mask_files[index]
             # get image and mask in PIL format
@@ -50,5 +63,14 @@ class DatasetSegmentation(Dataset):
 
             return inputs
     
-def collate_fn(batch):
+def collate_fn(batch: torch.utils.data) -> list(dict):
+    """
+    Used to get a list of dict as output when using a dataloader
+
+    Arguments:
+        batch: The batched dataset
+    
+    Return:
+        (list): list of batched dataset so a list(dict)
+    """
     return list(batch)

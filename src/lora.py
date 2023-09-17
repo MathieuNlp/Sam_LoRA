@@ -1,4 +1,5 @@
-from src.segment_anything import build_sam_vit_b, SamPredictor
+from src.segment_anything import build_sam_vit_b
+from src.segment_anything.modeling import Sam
 
 import numpy as np
 import torch
@@ -11,14 +12,27 @@ from safetensors.torch import save_file
 
 
 class LoRA_qkv(nn.Module):
+    """
+    LoRA adaption for attention modules. Only for queries and values
+
+    Arguments:
+        qkv: Original block of attention
+        linear_a_q: linear block for q
+        linear_b_q: linear block for q
+        linear_a_v: linear block for v
+        linear_b_v: linear block for v
+
+    Return:
+        qkv(nn.Module): qkv block with all linear blocks added (equivalent to adding the matrix B*A)
+    """
 
     def __init__(
             self,
             qkv,
-            linear_a_q,
-            linear_b_q,
-            linear_a_v,
-            linear_b_v,
+            linear_a_q: nn.Module,
+            linear_b_q: nn.Module,
+            linear_a_v: nn.Module,
+            linear_b_v: nn.Module,
     ):
         
         super(LoRA_qkv, self).__init__()
@@ -30,7 +44,7 @@ class LoRA_qkv(nn.Module):
         self.d_model = qkv.in_features
         self.w_identity = torch.eye(qkv.in_features)
 
-    def forward(self, x):
+    def forward(self, x: Tensor):
         qkv = self.qkv(x)
         q_ba = self.linear_b_q(self.linear_a_q(x))
         v_ba = self.linear_b_v(self.linear_a_v(x))
@@ -41,8 +55,12 @@ class LoRA_qkv(nn.Module):
 
 
 class LoRA_sam(nn.Module):
+    """
+    Class that takes the image encoder of SAM and add the lora weights to the attentions blocks
 
-    def __init__(self, sam_model, rank, lora_layer=None):
+    """
+
+    def __init__(self, sam_model: Sam, rank: int, lora_layer=None):
         super(LoRA_sam, self).__init__()
         self.rank = rank
         assert rank > 0
@@ -79,8 +97,6 @@ class LoRA_sam(nn.Module):
             w_a_linear_v.requires_grad = True
             w_b_linear_v.requires_grad = True
 
-
-
             self.A_weights.append(w_a_linear_q)
             self.B_weights.append(w_b_linear_q)
             self.A_weights.append(w_a_linear_v)
@@ -107,24 +123,18 @@ class LoRA_sam(nn.Module):
             nn.init.zeros_(w_B.weight)
 
 
-    def save_lora_parameters(self, filename):
+    def save_lora_parameters(self, filename: str):
         "save lora and fc parameters"
         num_layer = len(self.A_weights)
         # sufix 03:d -> allows to have a name 1 instead of 001
         a_tensors = {f"w_a_{i:03d}": self.A_weights[i].weight for i in range(num_layer)}
         b_tensors = {f"w_b_{i:03d}": self.B_weights[i].weight for i in range(num_layer)}
-        #dim_in = self.lora_vit.head.in_features
-        #dim_out = self.lora_vit.head.out_features
-
-        #fc_tensors = {f"fc_{dim_in}in_{dim_out}out": self.lora_vit.head.weight}
-
-        #merged_dict = {**a_tensors, **b_tensors, **fc_tensors}
         merged_dict = {**a_tensors, **b_tensors}
         save_file(merged_dict, filename)
 
 
-    def load_lora_parameters(self, filename):
-        # load lora and fc parameters
+    def load_lora_parameters(self, filename: str):
+        "load lora and fc parameters"
         with safe_open(filename, framework="pt") as f:
             for i, w_A_linear in enumerate(self.A_weights):
                 saved_key = f"w_a_{i:03d}"
@@ -135,35 +145,3 @@ class LoRA_sam(nn.Module):
                 saved_key = f"w_b_{i:03d}"
                 saved_tensor = f.get_tensor(saved_key)
                 w_B_linear.weight = nn.Parameter(saved_tensor)
-
-            #dim_in = self.lora_vit.head.in_features
-            #dim_out = self.lora_vit.head.out_features
-            #saved_key =  f"fc_{dim_in}in_{dim_out}out"
-
-            #try:
-            #    saved_tensors = f.get_tensor(saved_key)
-            #    self.lora_vit.weight = nn.Parameter(saved_tensor)
-            #except ValueError:
-            #    print("This fc weight don't fit")
-
-
-    def load_fc_parameters(self, filename):
-        
-        with safe_open(filename, framework="pt") as f:
-
-            dim_in = self.lora_vit.head.in_features
-            dim_out = self.lora_vit.head.out_features
-            saved_key =  f"fc_{dim_in}in_{dim_out}out"
-
-            try:
-                saved_tensor = f.get_tensor(saved_key)
-                self.lora_vit.head.weight = nn.Parameter(saved_tensor)
-            except ValueError:
-                print("This fc don't fit")
-
-            
-if __name__ == "__main__":
-    sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
-    sam_lora = LoRA_sam(sam,4)
-    #sam_lora.sam.image_encoder(torch.rand(size=(1,3,1024,1024))
-    print(sam_lora.parameters)

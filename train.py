@@ -16,21 +16,27 @@ import matplotlib.pyplot as plt
 
 dataset_path = "./bottle_glass_dataset"
 
+# Load SAM model
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
+# Create SAM LoRA
 sam_lora = LoRA_sam(sam,4)  
 model = sam_lora.sam
+
+# Process the dataset
 processor = Samprocessor(model)
 dataset = DatasetSegmentation(dataset_path, processor)
-#utils.plot_image_mask_dataset(dataset, 3)
 
+# Create a dataloader
 train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
+
+# Initialize optimize and Loss
 optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
-num_epochs = 1
+num_epochs = 10
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-#model.to(device)
+model.to(device)
 model.train()
 
 
@@ -62,6 +68,7 @@ for epoch in range(num_epochs):
 
     print(f'EPOCH: {epoch}')
     print(f'Mean loss: {mean(epoch_losses)}')
-    
+
+# Save the parameters of the model in safetensors format
 sam_lora.save_lora_parameters("lora.safetensors")
 
