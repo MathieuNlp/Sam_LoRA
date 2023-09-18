@@ -12,16 +12,13 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 with open("../config.yaml", "r") as ymlfile:
         config_file = yaml.load(ymlfile, Loader=yaml.Loader)
 
-
-
-
 # Path of the image we test
 image_path = config_file["TEST"]["IMAGE_PATH"]
 bbox = config_file["TEST"]["BBOX"]
 
 # Load LoRA SAM model
-sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
-sam_lora = LoRA_sam(sam,4)
+sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
+sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])
 sam_lora.load_lora_parameters("lora.safetensors")
 sam_lora.sam.to(device)
 with torch.no_grad():

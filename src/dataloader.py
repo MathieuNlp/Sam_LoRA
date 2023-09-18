@@ -16,13 +16,6 @@ import src.utils as utils
 import yaml
 
 
-
-with open("../config.yaml", "r") as ymlfile:
-        config_file = yaml.load(ymlfile, Loader=yaml.Loader)
-
-
-dataset_path = config_file["DATASET"]["FOLDER_PATH"]
-
 class DatasetSegmentation(Dataset):
     """
     Dataset to process the images and masks

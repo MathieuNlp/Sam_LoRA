@@ -13,13 +13,18 @@ from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
 import matplotlib.pyplot as plt
+import yaml
 
-dataset_path = "../bottle_glass_dataset"
+with open("../config.yaml", "r") as ymlfile:
+   config_file = yaml.load(ymlfile, Loader=yaml.Loader)
+
+
+dataset_path = config_file["DATASET"]["FOLDER_PATH"]
 
 # Load SAM model
-sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
+sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
 # Create SAM LoRA
-sam_lora = LoRA_sam(sam,4)  
+sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
 model = sam_lora.sam
 
 # Process the dataset
@@ -27,13 +32,13 @@ processor = Samprocessor(model)
 dataset = DatasetSegmentation(dataset_path, processor)
 
 # Create a dataloader
-train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
+train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
 
 # Initialize optimize and Loss
 optimizer = Adam(model.image_encoder.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
-num_epochs = 10
+num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 model.to(device)
