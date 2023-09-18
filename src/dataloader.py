@@ -46,7 +46,7 @@ class DatasetSegmentation(Dataset):
     def __len__(self):
         return len(self.img_files)
     
-    def __getitem__(self, index: int) -> list(dict):
+    def __getitem__(self, index: int) -> list:
             img_path = self.img_files[index]
             mask_path = self.mask_files[index]
             # get image and mask in PIL format
@@ -63,7 +63,7 @@ class DatasetSegmentation(Dataset):
 
             return inputs
     
-def collate_fn(batch: torch.utils.data) -> list(dict):
+def collate_fn(batch: torch.utils.data) -> list:
     """
     Used to get a list of dict as output when using a dataloader
 

@@ -14,7 +14,7 @@ from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
 import matplotlib.pyplot as plt
 
-dataset_path = "./bottle_glass_dataset"
+dataset_path = "../bottle_glass_dataset"
 
 # Load SAM model
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
@@ -30,7 +30,7 @@ dataset = DatasetSegmentation(dataset_path, processor)
 train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True, collate_fn=collate_fn)
 
 # Initialize optimize and Loss
-optimizer = Adam(sam_lora.lora_vit.parameters(), lr=1e-5, weight_decay=0)
+optimizer = Adam(model.image_encoder.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
 num_epochs = 10
@@ -51,8 +51,7 @@ for epoch in range(num_epochs):
       utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox)
       max_h, max_w = utils.get_max_size(batch)
       stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
-
-      #utils.batch_to_tensor_mask(batch)
+      
       loss = seg_loss(stk_gt_msk.float(), stk_pred_msk.float())
 
       # backward pass (compute gradients of parameters w.r.t. loss)

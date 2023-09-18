@@ -85,7 +85,7 @@ def get_bounding_box(ground_truth_map: np.array) -> list:
   return bbox
 
 
-def get_list_masks(batch: torch.utils.data, preds: list(dict)) -> (list, list, list):
+def get_list_masks(batch: torch.utils.data, preds: list) -> list:
     """
     Take the batch (list(dict)) return a list of preprocessed image tensor, predicted masks tensor and bounding box lists
 
@@ -94,9 +94,9 @@ def get_list_masks(batch: torch.utils.data, preds: list(dict)) -> (list, list, l
         preds: list(dict) that are predicted masks of the batch
 
     Return:
-        list_gt_msk: List of ground truth mask tensors of the batch
-        list_pred_msk: List of predicted mask tensors from the batch
-        list_bbox: List of bounding boxes from the batch
+        list_gt_msk: List of ground truth tensors mask tensors of the batch
+        list_pred_msk: List of predicted tensors mask tensors from the batch
+        list_bbox: List of tensors bounding tensorsboxes from the batch
     """
     list_gt_msk = []
     list_pred_msk = []
@@ -131,7 +131,7 @@ def get_max_size(batch: torch.utils.data) -> int:
     return max_size_h, max_size_w
 
 
-def pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w) -> (list(torch.tensor), list(torch.tensor)):
+def pad_batch_mask(list_gt_msk: list, list_pred_msk: list, max_h: int, max_w: int) -> list:
     """
     Pad all mask tensors ground truth and prediction from sam in the max size of the batch. This is because the monai diceloss requires same size tensors for batches.
     By 0-padding binary mask, we don't loose change the loss function
@@ -154,7 +154,7 @@ def pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w) -> (list(torch.tens
 
 
 
-def tensor_to_image(gt_masks: list(torch.tensor), pred_msks: list(torch.tensor), bboxes: list):
+def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list):
     """
     Get tensors of ground truth masks and predicted masks from SAM and plot them to compare
 
@@ -168,5 +168,5 @@ def tensor_to_image(gt_masks: list(torch.tensor), pred_msks: list(torch.tensor),
         axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
         axarr[0, i].imshow(gt_msk[:, :])
         axarr[1, i].imshow(pred_msk[:, :])
-    plt.savefig("./plots/comparaison.png")
+    plt.savefig("../plots/comparaison.png")
 
