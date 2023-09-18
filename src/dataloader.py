@@ -13,8 +13,15 @@ from src.processor import Samprocessor
 from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
 import src.utils as utils
+import yaml
 
-dataset_path = "./bottle_glass_dataset"
+
+
+with open("../config.yaml", "r") as ymlfile:
+        config_file = yaml.load(ymlfile, Loader=yaml.Loader)
+
+
+dataset_path = config_file["DATASET"]["FOLDER_PATH"]
 
 class DatasetSegmentation(Dataset):
     """

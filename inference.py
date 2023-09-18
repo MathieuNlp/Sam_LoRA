@@ -5,18 +5,25 @@ from src.lora import LoRA_sam
 from PIL import Image
 import matplotlib.pyplot as plt
 import src.utils as utils
+import yaml
 
-dataset_path = "./bottle_glass_dataset"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+with open("../config.yaml", "r") as ymlfile:
+        config_file = yaml.load(ymlfile, Loader=yaml.Loader)
+
+
+
+
 # Path of the image we test
-image_path = "./bottle_glass_dataset/test/perfume2.jpg"
-bbox = [307, 107, 646, 925]
+image_path = config_file["TEST"]["IMAGE_PATH"]
+bbox = config_file["TEST"]["BBOX"]
 
 # Load LoRA SAM model
 sam = build_sam_vit_b(checkpoint="sam_vit_b_01ec64.pth")
 sam_lora = LoRA_sam(sam,4)
 sam_lora.load_lora_parameters("lora.safetensors")
+sam_lora.sam.to(device)
 with torch.no_grad():
     sam_lora.sam.eval()
 

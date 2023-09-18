@@ -38,7 +38,7 @@ def plot_image_mask(image: PIL.Image, mask: PIL.Image, filename: str):
     show_mask(ground_truth_seg, axes)
     axes.title.set_text(f"{filename} predicted mask")
     axes.axis("off")
-    plt.savefig("./plots/" + filename + ".jpg")
+    plt.savefig("../plots/" + filename + ".jpg")
     
 
 def plot_image_mask_dataset(dataset: torch.utils.data.Dataset, idx: int):
