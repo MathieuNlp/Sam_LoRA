@@ -15,6 +15,7 @@ from src.lora import LoRA_sam
 import matplotlib.pyplot as plt
 import yaml
 
+# Load the config file
 with open("../config.yaml", "r") as ymlfile:
    config_file = yaml.load(ymlfile, Loader=yaml.Loader)
 
