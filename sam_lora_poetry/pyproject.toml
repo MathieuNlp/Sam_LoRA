@@ -10,9 +10,7 @@ packages = [{include = "sam_lora_poetry"}]
 python = ">=3.10,<3.13"
 pendulum = "^2.1.2"
 numpy = "^1.26.0"
-torch = { version = "1.12.1", source="torch"}
 matplotlib = "^3.8.0"
-pandas = "^2.1.0"
 torchvision = "^0.15.2"
 statistics = "^1.0.3.5"
 tqdm = "^4.66.1"
@@ -22,11 +20,9 @@ safetensors = "^0.3.3"
 opencv-python = "^4.8.0.76"
 pyyaml = "^6.0.1"
 gradio = "^3.44.3"
+torch = "^2.0.1"
 
-[[tool.poetry.source]]
-name = "torch"
-url = "https://download.pytorch.org/whl/cu116"
-secondary = true
+
 
 [build-system]
 requires = ["poetry-core"]
