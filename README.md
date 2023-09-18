@@ -8,19 +8,19 @@ I chose the vitb image encoder. I applied LoRA to the attention modules inside t
 I used bounding boxes for the prompt input.
 # Setup
 Get the repo with:
-`
+```sh
    git clone https://github.com/MathieuNlp/Sam_LoRA.git
-`
+```
 ## Config file
 There is a config file listing the hyperparameters to tune the model and some paths.
-`sh
+`
    config.yaml
 `
 ## Poetry
 All the dependecies are managed with poetry. i did not add a requirements.txt so you need to be inside sam_lora_poetry to run the model
-`sh
+```sh
    cd sam_lora_poetry
-`
+```
 
 ## Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
 `
@@ -28,21 +28,21 @@ All the dependecies are managed with poetry. i did not add a requirements.txt so
 `
 # Demo
 Gradio demo available by running. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
-`sh
+```sh
    poetry run python ../app.py
-`
+```
 
 # Training
 The training is not using the SamPredictor from Meta because I would like to be alble the handle batches. So i created a processor.py file in /src that allows to process the image and prompt accordingly. The saved weights are in lora.safetensors.
-`
+```sh
    poetry run python train.py
-`
+```
 
 # Inference
 Run an inference with the saved weights from the training.
-`sh
+```sh
    poetry run python inference.py
-`
+```
 # Plots
 The plots folder regroup some comparaison and results to visualize the results.
 comparaison.png: Plot during the training the ground truth mask on top and predicted masks on the bottom.
