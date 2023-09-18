@@ -1,6 +1,5 @@
 import gradio as gr
 import numpy as np
-import torch
 from PIL import Image
 from src.segment_anything import SamPredictor, sam_model_registry
 import matplotlib.pyplot as plt
@@ -9,6 +8,7 @@ from src.lora import LoRA_sam
 from src.segment_anything import build_sam_vit_b
 import yaml
 import cv2
+import torch
 
 with open("../config.yaml", "r") as ymlfile:
         config_file = yaml.load(ymlfile, Loader=yaml.Loader)
