@@ -44,12 +44,12 @@ Run an inference with the saved weights from the training.
    poetry run python inference.py
 ```
 # Plots
-The plots folder regroup some comparaison and results to visualize the results.
-comparaison.png: Plot during the training the ground truth mask on top and predicted masks on the bottom.
-gt_mask.jpg: Ground truth mask example.
-perfume2_notraining.jpg: Perfume 2 mask predicted by the model with no training.
-perfume2.jpg: Perfume 2 mask predicted by the model trained with 10 epochs.
-pred_perfume2_no_training.jpg: Original image and predicted mask visualisation
+- The plots folder regroup some comparaison and results to visualize the results.
+- comparaison.png: Plot during the training the ground truth mask on top and predicted masks on the bottom.
+- gt_mask.jpg: Ground truth mask example.
+- perfume2_notraining.jpg: Perfume 2 mask predicted by the model with no training.
+- perfume2.jpg: Perfume 2 mask predicted by the model trained with 10 epochs.
+- pred_perfume2_no_training.jpg: Original image and predicted mask visualisation
 
 
 # Sources
