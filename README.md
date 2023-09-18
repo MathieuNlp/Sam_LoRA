@@ -38,7 +38,7 @@ All the dependecies are managed with poetry.
 ```
 
 # Training
-The training is not using the SamPredictor from Meta because I would like to be alble the handle batches. So i created a processor.py file in /src that allows to process the image and prompt accordingly. The saved weights are in lora.safetensors.
+The training is not using the SamPredictor from Meta because I would like to be able to handle batches. So i created a processor.py file in /src that processes the images and prompts accordingly. The saved weights are in lora.safetensors.
 ```sh
    poetry run python train.py
 ```
