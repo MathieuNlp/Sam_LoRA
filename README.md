@@ -29,7 +29,7 @@ All the dependecies are managed with poetry. i did not add a requirements.txt so
 # Demo
 Gradio demo available by running. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
 ```sh
-   poetry run python ../app.py
+   demo_sam_lora.ipynb
 ```
 
 # Training

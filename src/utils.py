@@ -168,5 +168,7 @@ def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list):
         axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
         axarr[0, i].imshow(gt_msk[:, :])
         axarr[1, i].imshow(pred_msk[:, :])
+        axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
+        axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
     plt.savefig("../plots/comparaison.png")
 
