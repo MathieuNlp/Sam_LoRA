@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "sam_lora_poetry"}]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
+python = ">=3.9,<3.13"
 pendulum = "^2.1.2"
 numpy = "^1.26.0"
 torch = "^2.0.1"
