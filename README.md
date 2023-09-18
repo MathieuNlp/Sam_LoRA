@@ -13,22 +13,22 @@ Get the repo with:
 `
 ## Config file
 There is a config file listing the hyperparameters to tune the model and some paths.
-`
+`sh
    config.yaml
 `
 ## Poetry
 All the dependecies are managed with poetry. i did not add a requirements.txt so you need to be inside sam_lora_poetry to run the model
-`
+`sh
    cd sam_lora_poetry
 `
 
-## Get the SAM checkpoint
+## Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
 `
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 `
 # Demo
 Gradio demo available by running. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
-`
+`sh
    poetry run python ../app.py
 `
 
@@ -40,7 +40,7 @@ The training is not using the SamPredictor from Meta because I would like to be 
 
 # Inference
 Run an inference with the saved weights from the training.
-`
+`sh
    poetry run python inference.py
 `
 # Plots
