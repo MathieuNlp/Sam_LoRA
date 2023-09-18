@@ -23,9 +23,9 @@ All the dependecies are managed with poetry. i did not add a requirements.txt so
 ```
 
 ## Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
-`
+```sh
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
-`
+```
 # Demo
 Gradio demo available by running. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
 ```sh
