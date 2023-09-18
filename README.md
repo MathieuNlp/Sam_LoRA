@@ -1,35 +1,40 @@
 # Segment Anything model fine tuned with LoRA for product packshots
 
-In this project, we use the Segment Anything model released by Meta to capture masks of product packshots. This is challenging because some images can have shadows, reflects or even logos that needs to be taken into account.
+In this project, we use the Segment Anything model released by Meta to capture masks of product packshots. This is challenging because some images can have shadows, reflections or even logos that needs to be taken into account.
 
 ## Segment Anything & LoRA
 
-I chose the vitb image encoder. I applied LoRA to the attention modules inside the image encoder. I focused on queries and values as the LoRA (paper suggest that it is better).
-I used bounding boxes for the prompt input.
+I chose the **vitb** image encoder. I applied LoRA to the attention modules inside the image encoder. I focused on queries and values as the LoRA (paper suggest that it is better).
+I used bounding boxes for the input prompts.
+
 # Setup
 Get the repo with:
 ```sh
    git clone https://github.com/MathieuNlp/Sam_LoRA.git
 ```
+# Demo
+A gradio demo available. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
+```sh
+   demo.ipynb
+```
+# Local Run
+
 ## Config file
 There is a config file listing the hyperparameters to tune the model and some paths.
 `
    config.yaml
 `
+
 ## Poetry
-All the dependecies are managed with poetry. i did not add a requirements.txt so you need to be inside sam_lora_poetry to run the model
+All the dependecies are managed with poetry.
 ```sh
    cd sam_lora_poetry
+   poetry install 
 ```
 
 ## Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
 ```sh
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
-```
-# Demo
-Gradio demo available by running. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
-```sh
-   demo_sam_lora.ipynb
 ```
 
 # Training
