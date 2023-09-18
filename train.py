@@ -19,7 +19,7 @@ import yaml
 with open("../config.yaml", "r") as ymlfile:
    config_file = yaml.load(ymlfile, Loader=yaml.Loader)
 
-
+# Take dataset path
 dataset_path = config_file["DATASET"]["FOLDER_PATH"]
 
 # Load SAM model
