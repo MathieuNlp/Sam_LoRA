@@ -41,6 +41,7 @@ seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='m
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+# Set model to train and into the device
 model.to(device)
 model.train()
 
