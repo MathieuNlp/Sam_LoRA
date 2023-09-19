@@ -164,7 +164,7 @@ def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list, batch_num, ba
        pred_msks: List of predicted masks as tensors
        bboxes: list of bounding boxes
     """
-    f, axarr = plt.subplots(2,2)
+    f, axarr = plt.subplots(batch_size,batch_size)
     for i, (gt_msk, pred_msk, bbox) in enumerate(zip(gt_masks, pred_msks, bboxes)):
         axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
         axarr[0, i].imshow(gt_msk[:, :])
