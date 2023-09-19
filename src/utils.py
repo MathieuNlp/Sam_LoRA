@@ -39,6 +39,7 @@ def plot_image_mask(image: PIL.Image, mask: PIL.Image, filename: str):
     axes.title.set_text(f"{filename} predicted mask")
     axes.axis("off")
     plt.savefig("../plots/" + filename + ".jpg")
+    plt.close()
     
 
 def plot_image_mask_dataset(dataset: torch.utils.data.Dataset, idx: int):
@@ -154,7 +155,7 @@ def pad_batch_mask(list_gt_msk: list, list_pred_msk: list, max_h: int, max_w: in
 
 
 
-def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list):
+def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list, batch_num, batch_size):
     """
     Get tensors of ground truth masks and predicted masks from SAM and plot them to compare
 
@@ -167,8 +168,9 @@ def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list):
     for i, (gt_msk, pred_msk, bbox) in enumerate(zip(gt_masks, pred_msks, bboxes)):
         axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
         axarr[0, i].imshow(gt_msk[:, :])
-        axarr[1, i].imshow(pred_msk[:, :])
+        axarr[1, i].imshow(pred_msk[:, :].cpu())
         axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
         axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
-    plt.savefig("../plots/comparaison.png")
+    plt.savefig(f"./plots/comparaison_{batch_num}_{batch_size}.png")
+    plt.close()
 

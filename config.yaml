@@ -1,5 +1,8 @@
 DATASET:
-  FOLDER_PATH: "../bottle_glass_dataset"
+  TRAIN_PATH: "./dataset/train"
+  TRAIN_IMAGE_PATH: "../dataset/train"
+  TRAIN_MASK_PATH: "../dataset/train"
+  TEST_PATH: "../dataset/test"
 
 SAM:
   CHECKPOINT: "./sam_vit_b_01ec64.pth"
@@ -7,7 +10,7 @@ SAM:
 
 TRAIN:
   BATCH_SIZE: 2
-  NUM_EPOCHS: 1
+  NUM_EPOCHS: 200
 
 TEST:
   IMAGE_PATH: "../bottle_glass_dataset/test/perfume2.jpg"

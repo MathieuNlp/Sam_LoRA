@@ -16,11 +16,11 @@ import matplotlib.pyplot as plt
 import yaml
 
 # Load the config file
-with open("../config.yaml", "r") as ymlfile:
+with open("./config.yaml", "r") as ymlfile:
    config_file = yaml.load(ymlfile, Loader=yaml.Loader)
 
 # Take dataset path
-dataset_path = config_file["DATASET"]["FOLDER_PATH"]
+train_dataset_path = config_file["DATASET"]["TRAIN_PATH"]
 
 # Load SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
@@ -30,7 +30,7 @@ model = sam_lora.sam
 
 # Process the dataset
 processor = Samprocessor(model)
-dataset = DatasetSegmentation(dataset_path, processor)
+dataset = DatasetSegmentation(config_file, processor)
 
 # Create a dataloader
 train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
@@ -49,17 +49,18 @@ model.train()
 
 for epoch in range(num_epochs):
     epoch_losses = []
-    for batch in tqdm(train_dataloader):
+    for i, batch in enumerate(tqdm(train_dataloader)):
       
       outputs = model(batched_input=batch,
             multimask_output=False)
       
       list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
-      utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox)
+      if epoch % 10 == 0:
+        utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox, i, config_file["TRAIN"]["BATCH_SIZE"])
       max_h, max_w = utils.get_max_size(batch)
       stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
       
-      loss = seg_loss(stk_gt_msk.float(), stk_pred_msk.float())
+      loss = seg_loss(stk_gt_msk.float().to(device), stk_pred_msk.float().to(device))
 
       # backward pass (compute gradients of parameters w.r.t. loss)
       loss.requires_grad = True
