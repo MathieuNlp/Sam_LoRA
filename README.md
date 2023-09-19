@@ -31,6 +31,12 @@ All the dependecies are managed with poetry.
    cd sam_lora_poetry
    poetry install 
 ```
+If there is an error with Pytorch, Safetensors or CV2, do:
+```sh
+   poetry run pip install opencv-python safetensors torch==1.12.1+cu116 torchvision==0.13.1+cu116 -f https://download.pytorch.org/whl/torch_stable.html
+```
+
+
 
 ## Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
 ```sh
