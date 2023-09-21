@@ -24,10 +24,13 @@ train_dataset_path = config_file["DATASET"]["TRAIN_PATH"]
 
 # Load SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
-# Create SAM LoRA
-sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
-model = sam_lora.sam
-
+# # Create SAM LoRA
+# sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
+# model = sam_lora.sam
+model = sam
+for name, param in model.named_parameters():
+  if name.startswith("vision_encoder") or name.startswith("prompt_encoder"):
+    param.requires_grad_(False)
 # Process the dataset
 processor = Samprocessor(model)
 dataset = DatasetSegmentation(config_file, processor)
@@ -36,7 +39,7 @@ dataset = DatasetSegmentation(config_file, processor)
 train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
 
 # Initialize optimize and Loss
-optimizer = Adam(model.image_encoder.parameters(), lr=1e-5, weight_decay=0)
+optimizer = Adam(model.mask_decoder.parameters(), lr=1e-4, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
@@ -61,11 +64,10 @@ for epoch in range(num_epochs):
       stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
       
       loss = seg_loss(stk_gt_msk.float().to(device), stk_pred_msk.float().to(device))
-
-      # backward pass (compute gradients of parameters w.r.t. loss)
       loss.requires_grad = True
+      # backward pass (compute gradients of parameters w.r.t. loss)
+      
       optimizer.zero_grad()
-
       loss.backward()
 
       # optimize

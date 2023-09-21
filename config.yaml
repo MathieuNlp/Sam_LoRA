@@ -6,7 +6,7 @@ DATASET:
 
 SAM:
   CHECKPOINT: "./sam_vit_b_01ec64.pth"
-  RANK: 32
+  RANK: 4
 
 TRAIN:
   BATCH_SIZE: 2

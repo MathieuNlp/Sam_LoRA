@@ -9,7 +9,7 @@ from torch import Tensor
 from torch.nn.parameter import Parameter
 from safetensors import safe_open
 from safetensors.torch import save_file
-
+import yaml
 
 class LoRA_qkv(nn.Module):
     """
@@ -87,10 +87,13 @@ class LoRA_sam(nn.Module):
             w_qkv_linear = blk.attn.qkv
             self.d_model = w_qkv_linear.in_features
 
-            w_a_linear_q = nn.Linear(self.d_model, self.rank)
-            w_b_linear_q = nn.Linear(self.rank, self.d_model)
-            w_a_linear_v = nn.Linear(self.d_model, self.rank)
-            w_b_linear_v = nn.Linear(self.rank, self.d_model)
+            w_a_linear_q = nn.Linear(self.d_model, self.rank, bias=False)
+            w_b_linear_q = nn.Linear(self.rank, self.d_model, bias=False)
+            w_a_linear_v = nn.Linear(self.d_model, self.rank, bias=False)
+            w_b_linear_v = nn.Linear(self.rank, self.d_model, bias=False)
+
+            w_a_linear_q.requires_grad_=True
+            
 
             self.A_weights.append(w_a_linear_q)
             self.B_weights.append(w_b_linear_q)
@@ -140,3 +143,6 @@ class LoRA_sam(nn.Module):
                 saved_key = f"w_b_{i:03d}"
                 saved_tensor = f.get_tensor(saved_key)
                 w_B_linear.weight = nn.Parameter(saved_tensor)
+
+with open("./config.yaml", "r") as ymlfile:
+   config_file = yaml.load(ymlfile, Loader=yaml.Loader)

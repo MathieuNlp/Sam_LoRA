@@ -164,13 +164,20 @@ def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list, batch_num, ba
        pred_msks: List of predicted masks as tensors
        bboxes: list of bounding boxes
     """
-    f, axarr = plt.subplots(batch_size,batch_size)
+    f, axarr = plt.subplots(2, batch_size)
     for i, (gt_msk, pred_msk, bbox) in enumerate(zip(gt_masks, pred_msks, bboxes)):
-        axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
-        axarr[0, i].imshow(gt_msk[:, :])
-        axarr[1, i].imshow(pred_msk[:, :].cpu())
-        axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
-        axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
+        if batch_size == 1:
+            axarr[1].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
+            axarr[0].imshow(gt_msk[:, :])
+            axarr[1].imshow(pred_msk[:, :].cpu())
+            axarr[0].set_title('Original Mask', fontdict  = {"fontsize": 8})
+            axarr[1].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
+        else:
+            axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
+            axarr[0, i].imshow(gt_msk[:, :])
+            axarr[1, i].imshow(pred_msk[:, :].cpu())
+            axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
+            axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
     plt.savefig(f"./plots/comparaison_{batch_num}_{batch_size}.png")
     plt.close()
 

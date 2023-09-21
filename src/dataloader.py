@@ -52,7 +52,7 @@ class DatasetSegmentation(Dataset):
             # get image and mask in PIL format
             image =  Image.open(img_path)
             mask = Image.open(mask_path)
-            #mask = mask.convert('1')
+            mask = mask.convert('1')
             ground_truth_mask =  np.array(mask)
             original_size = tuple(image.size)[::-1]
     
