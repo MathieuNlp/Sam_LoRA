@@ -41,10 +41,12 @@ dataset = DatasetSegmentation(config_file, processor)
 train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
 
 # Initialize optimize and Loss
-optimizer = Adam(model.image_encoder.parameters(), lr=1e-5, weight_decay=0)
+optimizer = Adam(model.image_encoder.parameters(), lr=1e-4, weight_decay=0)
 
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
+
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
+
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Set model to train and into the device
@@ -77,7 +79,6 @@ for epoch in range(num_epochs):
       
       optimizer.zero_grad()
 
-      loss.requires_grad = True
       loss.backward()
 
       # optimize
