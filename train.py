@@ -50,8 +50,9 @@ num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Set model to train and into the device
-model.to(device)
 model.train()
+model.to(device)
+
 
 for epoch in range(num_epochs):
     epoch_losses = []
