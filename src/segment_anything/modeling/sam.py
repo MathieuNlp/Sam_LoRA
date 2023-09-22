@@ -45,7 +45,7 @@ class Sam(nn.Module):
         self.register_buffer("pixel_mean", torch.Tensor(pixel_mean).view(-1, 1, 1), False)
         self.register_buffer("pixel_std", torch.Tensor(pixel_std).view(-1, 1, 1), False)
 
-    @property
+    #@property
     def device(self) -> Any:
         return self.pixel_mean.device
 
