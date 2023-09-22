@@ -25,13 +25,13 @@ train_dataset_path = config_file["DATASET"]["TRAIN_PATH"]
 
 # Load SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
-# #Create SAM LoRA
-# sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
-# model = sam_lora.sam
-model = sam
-for name, param in model.named_parameters():
-  if name.startswith("vision_encoder") or name.startswith("prompt_encoder"):
-    param.requires_grad_(False)
+#Create SAM LoRA
+sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
+model = sam_lora.sam
+# model = sam
+# for name, param in model.named_parameters():
+#   if name.startswith("vision_encoder") or name.startswith("prompt_encoder"):
+#     param.requires_grad_(False)
 
 # Process the dataset
 processor = Samprocessor(model)
@@ -41,7 +41,7 @@ dataset = DatasetSegmentation(config_file, processor)
 train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
 
 # Initialize optimize and Loss
-optimizer = Adam(model.mask_decoder.parameters(), lr=1e-5, weight_decay=0)
+optimizer = Adam(model.image_encoder.parameters(), lr=1e-5, weight_decay=0)
 
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
