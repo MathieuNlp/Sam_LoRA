@@ -14,6 +14,7 @@ from src.segment_anything import build_sam_vit_b, SamPredictor
 from src.lora import LoRA_sam
 import matplotlib.pyplot as plt
 import yaml
+import torch.nn.functional as F
 
 # Load the config file
 with open("./config.yaml", "r") as ymlfile:
@@ -24,13 +25,14 @@ train_dataset_path = config_file["DATASET"]["TRAIN_PATH"]
 
 # Load SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
-# # Create SAM LoRA
+#Create SAM LoRA
 # sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
 # model = sam_lora.sam
 model = sam
 for name, param in model.named_parameters():
   if name.startswith("vision_encoder") or name.startswith("prompt_encoder"):
     param.requires_grad_(False)
+
 # Process the dataset
 processor = Samprocessor(model)
 dataset = DatasetSegmentation(config_file, processor)
@@ -39,9 +41,8 @@ dataset = DatasetSegmentation(config_file, processor)
 train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
 
 # Initialize optimize and Loss
-optimizer = Adam(model.mask_decoder.parameters(), lr=1e-4, weight_decay=0)
+optimizer = Adam(model.mask_decoder.parameters(), lr=1e-5, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
-
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -50,6 +51,8 @@ model.to(device)
 model.train()
 
 
+seg_loss.requires_grad = True
+
 for epoch in range(num_epochs):
     epoch_losses = []
     for i, batch in enumerate(tqdm(train_dataloader)):
@@ -57,16 +60,24 @@ for epoch in range(num_epochs):
       outputs = model(batched_input=batch,
             multimask_output=False)
       
+
       list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
       if epoch % 10 == 0:
         utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox, i, config_file["TRAIN"]["BATCH_SIZE"])
-      max_h, max_w = utils.get_max_size(batch)
-      stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
+      ############
+      #max_h, max_w = utils.get_max_size(batch)
+      #stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
+      #loss = seg_loss(stk_gt_msk.float().to(device), stk_pred_msk.float().to(device))
+      ############
       
-      loss = seg_loss(stk_gt_msk.float().to(device), stk_pred_msk.float().to(device))
-      loss.requires_grad = True
-      # backward pass (compute gradients of parameters w.r.t. loss)
-      
+      # loss = 0
+      # for gt, pred in zip(list_gt_msk, list_pred_msk):
+      #   loss += seg_loss(pred.float().to(device), gt.to(device))
+      stk_gt, stk_preds = utils.stacking_batch(batch, outputs)
+      #print(stk_gt.shape, stk_preds.shape)
+      print(stk_preds.shape, stk_gt.shape)
+      loss = seg_loss(stk_preds.unsqueeze(1).float().to(device), stk_gt.unsqueeze(1).float().to(device))
+
       optimizer.zero_grad()
       loss.backward()
 
