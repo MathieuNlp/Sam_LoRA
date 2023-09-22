@@ -1,5 +1,5 @@
 from src.segment_anything import build_sam_vit_b
-from src.segment_anything.modeling import Sam
+from src.segment_anything.modeling.sam import Sam
 
 import numpy as np
 import torch
