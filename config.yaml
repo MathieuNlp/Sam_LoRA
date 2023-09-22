@@ -6,11 +6,11 @@ DATASET:
 
 SAM:
   CHECKPOINT: "./sam_vit_b_01ec64.pth"
-  RANK: 8
+  RANK: 64
 
 TRAIN:
   BATCH_SIZE: 1
-  NUM_EPOCHS: 200
+  NUM_EPOCHS: 100
 
 TEST:
   IMAGE_PATH: "../bottle_glass_dataset/test/perfume2.jpg"
