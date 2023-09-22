@@ -49,7 +49,6 @@ class Sam(nn.Module):
     def device(self) -> Any:
         return self.pixel_mean.device
 
-    #@torch.no_grad()
     def forward(
         self,
         batched_input: List[Dict[str, Any]],
