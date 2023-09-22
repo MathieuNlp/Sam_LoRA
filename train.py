@@ -78,7 +78,7 @@ for epoch in range(num_epochs):
       loss = seg_loss(stk_preds.unsqueeze(1).float().to(device), stk_gt.unsqueeze(1).float().to(device))
       
       optimizer.zero_grad()
-
+      loss.requires_grad = True
       loss.backward()
 
       # optimize
