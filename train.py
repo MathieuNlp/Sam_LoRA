@@ -76,7 +76,6 @@ for epoch in range(num_epochs):
       #   loss += seg_loss(pred.float().to(device), gt.to(device))
       stk_gt, stk_preds = utils.stacking_batch(batch, outputs)
       #print(stk_gt.shape, stk_preds.shape)
-      print(stk_preds.shape, stk_gt.shape)
       loss = seg_loss(stk_preds.unsqueeze(1).float().to(device), stk_gt.unsqueeze(1).float().to(device))
       
       optimizer.zero_grad()
