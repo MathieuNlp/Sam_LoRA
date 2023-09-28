@@ -61,7 +61,7 @@ for epoch in range(num_epochs):
       outputs = model(batched_input=batch,
             multimask_output=False)
       
-
+      
       list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
       if epoch % 10 == 0:
         utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox, i, config_file["TRAIN"]["BATCH_SIZE"])
@@ -74,12 +74,12 @@ for epoch in range(num_epochs):
       # loss = 0
       # for gt, pred in zip(list_gt_msk, list_pred_msk):
       #   loss += seg_loss(pred.float().to(device), gt.to(device))
-      stk_gt, stk_preds = utils.stacking_batch(batch, outputs)
+      #stk_gt, stk_preds = utils.stacking_batch(batch, outputs)
       #print(stk_gt.shape, stk_preds.shape)
-      loss = seg_loss(stk_preds.unsqueeze(1).float().to(device), stk_gt.unsqueeze(1).float().to(device))
+      loss = seg_loss(outputs["masks"][0], batch["ground_truth_mask"].float())
       
       optimizer.zero_grad()
-      loss.requires_grad = True
+      #loss.requires_grad = True
       loss.backward()
 
       # optimize
