@@ -76,7 +76,14 @@ for epoch in range(num_epochs):
       #   loss += seg_loss(pred.float().to(device), gt.to(device))
       #stk_gt, stk_preds = utils.stacking_batch(batch, outputs)
       #print(stk_gt.shape, stk_preds.shape)
-      loss = seg_loss(outputs["masks"][0], batch["ground_truth_mask"].float())
+
+      gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0)
+      loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
+      
+      optimizer.zero_grad()
+      #loss.requires_grad = True
+      loss.backward()
+
       
       optimizer.zero_grad()
       #loss.requires_grad = True
