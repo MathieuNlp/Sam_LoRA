@@ -65,28 +65,12 @@ for epoch in range(num_epochs):
       list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
       if epoch % 10 == 0:
         utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox, i, config_file["TRAIN"]["BATCH_SIZE"])
-      ############
-      #max_h, max_w = utils.get_max_size(batch)
-      #stk_gt_msk, stk_pred_msk = utils.pad_batch_mask(list_gt_msk, list_pred_msk, max_h, max_w)
-      #loss = seg_loss(stk_gt_msk.float().to(device), stk_pred_msk.float().to(device))
-      ############
-      
-      # loss = 0
-      # for gt, pred in zip(list_gt_msk, list_pred_msk):
-      #   loss += seg_loss(pred.float().to(device), gt.to(device))
-      #stk_gt, stk_preds = utils.stacking_batch(batch, outputs)
-      #print(stk_gt.shape, stk_preds.shape)
 
-      gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0)
+      gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
       loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
       
-      optimizer.zero_grad()
-      #loss.requires_grad = True
-      loss.backward()
-
       
       optimizer.zero_grad()
-      #loss.requires_grad = True
       loss.backward()
 
       # optimize
