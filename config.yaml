@@ -1,7 +1,5 @@
 DATASET:
   TRAIN_PATH: "./dataset/new_train"
-  TRAIN_IMAGE_PATH: "../dataset/train"
-  TRAIN_MASK_PATH: "../dataset/train"
   TEST_PATH: "../dataset/test"
 
 SAM:
