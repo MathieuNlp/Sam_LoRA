@@ -4,11 +4,11 @@ DATASET:
 
 SAM:
   CHECKPOINT: "./sam_vit_b_01ec64.pth"
-  RANK: 8
+  RANK: 4
 
 TRAIN:
-  BATCH_SIZE: 1
-  NUM_EPOCHS: 100
+  BATCH_SIZE: 2
+  NUM_EPOCHS: 50
 
 TEST:
   IMAGE_PATH: "./dataset/new_train/images/ring4.jpg"
