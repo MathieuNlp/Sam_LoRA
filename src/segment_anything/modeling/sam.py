@@ -113,17 +113,21 @@ class Sam(nn.Module):
                 dense_prompt_embeddings=dense_embeddings,
                 multimask_output=multimask_output,
             )
+
+
             masks = self.postprocess_masks(
                 low_res_masks,
                 input_size=image_record["image"].shape[-2:],
                 original_size=image_record["original_size"],
             )
+            
+            low_res_mask_reshaped = masks
             masks = masks > self.mask_threshold
             outputs.append(
                 {
                     "masks": masks,
                     "iou_predictions": iou_predictions,
-                    "low_res_logits": low_res_masks,
+                    "low_res_logits": low_res_mask_reshaped,
                 }
             )
         return outputs

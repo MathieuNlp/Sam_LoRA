@@ -1,6 +1,6 @@
 DATASET:
   TRAIN_PATH: "./dataset/train"
-  TEST_PATH: "../dataset/test"
+  TEST_PATH: "./dataset/test"
 
 SAM:
   CHECKPOINT: "./sam_vit_b_01ec64.pth"

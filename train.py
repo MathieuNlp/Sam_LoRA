@@ -66,7 +66,7 @@ for epoch in range(num_epochs):
       list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
       if epoch % 10 == 0:
         utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox, i, config_file["TRAIN"]["BATCH_SIZE"])
-
+      print()
       gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
       loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
       total_loss.append(loss)
