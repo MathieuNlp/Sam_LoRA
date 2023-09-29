@@ -19,7 +19,7 @@ bbox = config_file["TEST"]["BBOX"]
 # Load LoRA SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
 sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])
-sam_lora.load_lora_parameters("lora.safetensors")
+sam_lora.load_lora_parameters("samlora.safetensors")
 model = sam_lora.sam
 model.to(device)
 with torch.no_grad():

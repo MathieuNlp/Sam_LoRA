@@ -12,4 +12,4 @@ TRAIN:
 
 TEST:
   IMAGE_PATH: "./dataset/new_train/images/ring4.jpg"
-  BBOX: [13, 46, 210, 197]
+  BBOX: [23, 40, 228, 199]
