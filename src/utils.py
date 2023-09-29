@@ -38,7 +38,7 @@ def plot_image_mask(image: PIL.Image, mask: PIL.Image, filename: str):
     show_mask(ground_truth_seg, axes)
     axes.title.set_text(f"{filename} predicted mask")
     axes.axis("off")
-    plt.savefig("../plots/" + filename + ".jpg")
+    plt.savefig("./plots/" + filename + ".jpg")
     plt.close()
     
 
@@ -172,13 +172,15 @@ def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list, batch_num, ba
             axarr[1].imshow(pred_msk.squeeze(0).permute(1, 2, 0).cpu())
             axarr[0].set_title('Original Mask', fontdict  = {"fontsize": 8})
             axarr[1].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
+            plt.savefig(f"./plots/comparaison_single_batch.jpg")
         else:
             axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
             axarr[0, i].imshow(gt_msk.squeeze(0).permute(1, 2, 0))
             axarr[1, i].imshow(pred_msk.squeeze(0).permute(1, 2, 0).cpu())
             axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
             axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
-    plt.savefig(f"./plots/comparaison_{batch_num}_{batch_size-1}.png")
+            plt.savefig(f"./plots/comparaison_{i}_{batch_size-1}.jpg")
+    
     plt.close()
 
 def stacking_batch(batch, preds):

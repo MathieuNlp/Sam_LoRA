@@ -82,5 +82,5 @@ for epoch in range(num_epochs):
     print(f'Mean loss: {mean(epoch_losses)}')
 
 # Save the parameters of the model in safetensors format
-sam_lora.save_lora_parameters("lora.safetensors")
+sam_lora.save_lora_parameters("samlora.safetensors")
 

@@ -9,7 +9,7 @@ import yaml
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-with open("../config.yaml", "r") as ymlfile:
+with open("./config.yaml", "r") as ymlfile:
         config_file = yaml.load(ymlfile, Loader=yaml.Loader)
 
 # Path of the image we test
@@ -20,20 +20,21 @@ bbox = config_file["TEST"]["BBOX"]
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
 sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])
 sam_lora.load_lora_parameters("lora.safetensors")
-sam_lora.sam.to(device)
+model = sam_lora.sam
+model.to(device)
 with torch.no_grad():
-    sam_lora.sam.eval()
+    model.eval()
 
     # Process the image
-    processor = Samprocessor(sam_lora.sam)
+    processor = Samprocessor(model)
     image =  Image.open(image_path)
     original_size = tuple(image.size)[::-1]
 
     # Predict the mask
     inputs = [processor(image, original_size, bbox)]
-    outputs = sam_lora.sam(inputs, multimask_output=False)
+    outputs = model(inputs, multimask_output=False)
 
     # Plot the mask
-    pred_mask = outputs[0]["masks"].squeeze(0).squeeze(0).numpy()
+    pred_mask = outputs[0]["masks"].squeeze(0).squeeze(0).cpu().numpy()
     pred_mask_pil = Image.fromarray(pred_mask)
-    utils.plot_image_mask(image, pred_mask_pil, "perfume2")
+    utils.plot_image_mask(image, pred_mask_pil, "ring4_test")
