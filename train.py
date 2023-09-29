@@ -53,6 +53,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model.train()
 model.to(device)
 
+total_loss = []
 
 for epoch in range(num_epochs):
     epoch_losses = []
@@ -68,7 +69,7 @@ for epoch in range(num_epochs):
 
       gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
       loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
-      
+      total_loss.append(loss)
       
       optimizer.zero_grad()
       loss.backward()
@@ -82,5 +83,5 @@ for epoch in range(num_epochs):
     print(f'Mean loss: {mean(epoch_losses)}')
 
 # Save the parameters of the model in safetensors format
-sam_lora.save_lora_parameters("samlora.safetensors")
-
+rank = config_file["SAM"]["RANK"]
+sam_lora.save_lora_parameters(f"lora_rank{rank}.safetensors")

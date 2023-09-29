@@ -1,15 +1,11 @@
 DATASET:
-  TRAIN_PATH: "./dataset/new_train"
+  TRAIN_PATH: "./dataset/train"
   TEST_PATH: "../dataset/test"
 
 SAM:
   CHECKPOINT: "./sam_vit_b_01ec64.pth"
-  RANK: 4
+  RANK: 2
 
 TRAIN:
   BATCH_SIZE: 1
   NUM_EPOCHS: 50
-
-TEST:
-  IMAGE_PATH: "./dataset/new_train/images/ring4.jpg"
-  BBOX: [23, 40, 228, 199]
