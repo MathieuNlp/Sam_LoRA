@@ -8,9 +8,9 @@
 "ring5.jpg": {"mask_path":"./dataset/train/masks/ring5.jpg", "bbox": [163, 197, 477, 597]}
 },
 "test": 
-{"ring_test_1.jpg" : {"bbox": [152, 190, 503, 609]},
-"ring_test_2.jpg" : {"bbox": [17, 17, 436, 290]},
-"ring_test_3.jpg" : {"bbox": [72, 341, 938, 657]},
+{"ring_test_1.jpg" : {"bbox": [0, 65, 769, 529]},
+"ring_test_2.jpg" : {"bbox": [74, 351, 936, 649]},
+"ring_test_3.jpg" : {"bbox": [203, 91, 602, 652]},
 "ring_test_4.jpg" : {"bbox": [3, 57, 789, 452]},
 "ring_test_5.jpg" : {"bbox": [196, 83, 627, 644]}
 }

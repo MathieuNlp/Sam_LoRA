@@ -9,17 +9,20 @@ import src.utils as utils
 from PIL import Image, ImageDraw
 import yaml
 import json
+from torchvision.transforms import ToTensor
 
 sam_checkpoint = "sam_vit_b_01ec64.pth"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def load_sam_baseline(checkpoint):
     sam = build_sam_vit_b(checkpoint=checkpoint)
+
     return sam
 
 def load_sam_lora(sam_model, rank):
     sam_lora = LoRA_sam(sam_model, rank)
     sam_lora.load_lora_parameters(f"./lora_weights/lora_rank{rank}.safetensors")
+
     return sam_lora
 
 
@@ -43,7 +46,7 @@ def inference_model(sam_model, image_path, filename, mask_path=None, bbox=None, 
 
     predictor = SamPredictor(model)
     predictor.set_image(np.array(image))
-    masks, _, _ = predictor.predict(
+    masks, iou_pred, low_res_iou = predictor.predict(
         box=np.array(box),
         multimask_output=False,
     )
@@ -60,7 +63,7 @@ def inference_model(sam_model, image_path, filename, mask_path=None, bbox=None, 
             ax2.set_title(f"Baseline SAM prediction: {filename}")
         else:
             ax2.set_title(f"SAM LoRA rank {rank} prediction: {filename}")
-        plt.savefig("./plots/baseline/" + filename)
+        plt.savefig("./plots/" + filename)
 
     else:
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(15, 15))
@@ -77,7 +80,7 @@ def inference_model(sam_model, image_path, filename, mask_path=None, bbox=None, 
             ax3.set_title(f"Baseline SAM prediction: {filename}")
         else:
             ax3.set_title(f"SAM LoRA rank {rank} prediction: {filename}")
-        plt.savefig("./plots/tests/" + filename)
+        plt.savefig("./plots/" + filename)
 
 
 # Open configuration file
@@ -96,11 +99,16 @@ test_set = annotations["test"]
 inference_train = False
 
 if inference_train:
+    total_loss = []
     for image_name, dict_annot in train_set.items():
         image_path = f"./dataset/train/images/{image_name}"
         inference_model(sam_lora_model, image_path, filename=image_name, mask_path=dict_annot["mask_path"], bbox=dict_annot["bbox"], is_baseline=False)
 
+
 else:
+    total_loss = []
     for image_name, dict_annot in test_set.items():
-        image_path = f"./dataset/test/{image_name}"
+        image_path = f"./dataset/test/images/{image_name}"
         inference_model(sam_lora_model, image_path, filename=image_name, bbox=dict_annot["bbox"], is_baseline=False)
+        
+        
