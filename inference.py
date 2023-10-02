@@ -92,7 +92,7 @@ f = open('annotations.json')
 annotations = json.load(f)
 
 sam_baseline_model = load_sam_baseline(sam_checkpoint)
-sam_lora_model = load_sam_lora(sam_baseline_model, rank=2)
+sam_lora_model = load_sam_lora(sam_baseline_model, rank=4)
 
 train_set = annotations["train"]
 test_set = annotations["test"]
