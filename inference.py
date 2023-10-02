@@ -13,17 +13,11 @@ from torchvision.transforms import ToTensor
 
 sam_checkpoint = "sam_vit_b_01ec64.pth"
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
-def load_sam_baseline(checkpoint):
-    sam = build_sam_vit_b(checkpoint=checkpoint)
-
-    return sam
-
-def load_sam_lora(sam_model, rank):
-    sam_lora = LoRA_sam(sam_model, rank)
-    sam_lora.load_lora_parameters(f"./lora_weights/lora_rank{rank}.safetensors")
-
-    return sam_lora
+sam = build_sam_vit_b(checkpoint=sam_checkpoint)
+rank =4
+sam_lora = LoRA_sam(sam, rank)
+sam_lora.load_lora_parameters(f"./lora_weights/lora_rank{rank}.safetensors")
+model = sam_lora.sam
 
 
 def inference_model(sam_model, image_path, filename, mask_path=None, bbox=None, is_baseline=False):
@@ -91,24 +85,22 @@ with open("./config.yaml", "r") as ymlfile:
 f = open('annotations.json')
 annotations = json.load(f)
 
-sam_baseline_model = load_sam_baseline(sam_checkpoint)
-sam_lora_model = load_sam_lora(sam_baseline_model, rank=4)
 
 train_set = annotations["train"]
 test_set = annotations["test"]
-inference_train = False
+inference_train = True
 
 if inference_train:
     total_loss = []
     for image_name, dict_annot in train_set.items():
         image_path = f"./dataset/train/images/{image_name}"
-        inference_model(sam_lora_model, image_path, filename=image_name, mask_path=dict_annot["mask_path"], bbox=dict_annot["bbox"], is_baseline=False)
+        inference_model(sam_lora, image_path, filename=image_name, mask_path=dict_annot["mask_path"], bbox=dict_annot["bbox"], is_baseline=False)
 
 
 else:
     total_loss = []
     for image_name, dict_annot in test_set.items():
         image_path = f"./dataset/test/images/{image_name}"
-        inference_model(sam_lora_model, image_path, filename=image_name, bbox=dict_annot["bbox"], is_baseline=False)
+        inference_model(sam_lora, image_path, filename=image_name, bbox=dict_annot["bbox"], is_baseline=False)
         
         
