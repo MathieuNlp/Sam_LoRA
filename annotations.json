@@ -1,5 +1,18 @@
-{"images" : {"bottle2": {"bbox": [[338,117], [690, 1379]]}, 
-"bottle3": {"bbox": [[374,162], [629, 835]]}, 
-"glass1": {"bbox": [[58,84], [397, 569]]}, 
-"glass2": {"bbox": [[284,282], [830, 1428]]}, 
-"perfume1":{"bbox": [[669,249], [1383, 1793]]}}}
+{
+"train": 
+{
+"ring1.jpg": {"mask_path":"./dataset/train/masks/ring1.jpg", "bbox": [27, 25, 172, 209]},
+"ring2.jpg": {"mask_path":"./dataset/train/masks/ring2.jpg", "bbox": [569, 239, 1286, 944]},
+"ring3.jpg": {"mask_path":"./dataset/train/masks/ring3.jpg", "bbox": [135, 68, 466, 415]},
+"ring4.jpg": {"mask_path":"./dataset/train/masks/ring4.jpg", "bbox": [133, 234, 1085, 718]},
+"ring5.jpg": {"mask_path":"./dataset/train/masks/ring5.jpg", "bbox": [163, 197, 477, 597]}
+},
+"test": 
+{"ring_test_1.jpg" : {"bbox": [0, 65, 769, 529]},
+"ring_test_2.jpg" : {"bbox": [74, 351, 936, 649]},
+"ring_test_3.jpg" : {"bbox": [203, 91, 602, 652]},
+"ring_test_4.jpg" : {"bbox": [3, 57, 789, 452]},
+"ring_test_5.jpg" : {"bbox": [196, 83, 627, 644]}
+}
+
+}

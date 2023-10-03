@@ -38,7 +38,8 @@ def plot_image_mask(image: PIL.Image, mask: PIL.Image, filename: str):
     show_mask(ground_truth_seg, axes)
     axes.title.set_text(f"{filename} predicted mask")
     axes.axis("off")
-    plt.savefig("../plots/" + filename + ".jpg")
+    plt.savefig("./plots/" + filename + ".jpg")
+    plt.close()
     
 
 def plot_image_mask_dataset(dataset: torch.utils.data.Dataset, idx: int):
@@ -103,8 +104,8 @@ def get_list_masks(batch: torch.utils.data, preds: list) -> list:
     list_bbox = []
     for k in range (len(batch)):
         list_bbox.append(batch[k]["prompt"])
-        list_gt_msk.append(batch[k]["ground_truth_mask"])
-        list_pred_msk.append(preds[k]["masks"].squeeze(0).squeeze(0))
+        list_gt_msk.append(batch[k]["ground_truth_mask"].unsqueeze(0).unsqueeze(0))
+        list_pred_msk.append(preds[k]["masks"])
 
     return list_gt_msk, list_pred_msk, list_bbox
 
@@ -154,7 +155,7 @@ def pad_batch_mask(list_gt_msk: list, list_pred_msk: list, max_h: int, max_w: in
 
 
 
-def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list):
+def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list, batch_num, batch_size):
     """
     Get tensors of ground truth masks and predicted masks from SAM and plot them to compare
 
@@ -163,12 +164,30 @@ def tensor_to_image(gt_masks: list, pred_msks: list, bboxes: list):
        pred_msks: List of predicted masks as tensors
        bboxes: list of bounding boxes
     """
-    f, axarr = plt.subplots(2,2)
+    f, axarr = plt.subplots(2, batch_size)
     for i, (gt_msk, pred_msk, bbox) in enumerate(zip(gt_masks, pred_msks, bboxes)):
-        axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
-        axarr[0, i].imshow(gt_msk[:, :])
-        axarr[1, i].imshow(pred_msk[:, :])
-        axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
-        axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
-    plt.savefig("../plots/comparaison.png")
+        if batch_size == 1:
+            axarr[1].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
+            axarr[0].imshow(gt_msk.squeeze(0).permute(1, 2, 0))
+            axarr[1].imshow(pred_msk.squeeze(0).permute(1, 2, 0).cpu())
+            axarr[0].set_title('Original Mask', fontdict  = {"fontsize": 8})
+            axarr[1].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
+            plt.savefig(f"./plots/comparaison_single_batch.jpg")
+        else:
+            axarr[1, i].scatter([bbox[0], bbox[2]], [bbox[1], bbox[3]])
+            axarr[0, i].imshow(gt_msk.squeeze(0).permute(1, 2, 0))
+            axarr[1, i].imshow(pred_msk.squeeze(0).permute(1, 2, 0).cpu())
+            axarr[0, i].set_title('Original Mask', fontdict  = {"fontsize": 8})
+            axarr[1, i].set_title('Predicted Mask', fontdict  = {"fontsize": 8})
+            plt.savefig(f"./plots/comparaison_{i}_{batch_size-1}.jpg")
+    
+    plt.close()
 
+def stacking_batch(batch, preds):
+    stk_pred = torch.tensor([])
+    stk_gt = torch.tensor([]) 
+    for k in range(len(batch)):
+        stk_gt = torch.cat((stk_gt, batch[k]["ground_truth_mask"].unsqueeze(0)))
+        stk_pred = torch.cat((stk_pred, preds[k]["masks"][0].cpu()))
+        
+    return stk_gt, stk_pred

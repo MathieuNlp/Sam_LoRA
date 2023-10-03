@@ -59,7 +59,7 @@ class SamPredictor:
 
         self.set_torch_image(input_image_torch, image.shape[:2])
 
-    @torch.no_grad()
+    #@torch.no_grad()
     def set_torch_image(
         self,
         transformed_image: torch.Tensor,
@@ -165,7 +165,7 @@ class SamPredictor:
         low_res_masks_np = low_res_masks[0].detach().cpu().numpy()
         return masks_np, iou_predictions_np, low_res_masks_np
 
-    @torch.no_grad()
+    #@torch.no_grad()
     def predict_torch(
         self,
         point_coords: Optional[torch.Tensor],
