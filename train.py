@@ -32,10 +32,8 @@ model = sam_lora.sam
 # Process the dataset
 processor = Samprocessor(model)
 train_ds = DatasetSegmentation(config_file, processor, mode="train")
-valid_ds = DatasetSegmentation(config_file, processor, mode="valid")
 # Create a dataloader
 train_dataloader = DataLoader(train_ds, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
-valid_dataloader = DataLoader(valid_ds, batch_size=1, shuffle=True, collate_fn=collate_fn)
 # Initialize optimize and Loss
 optimizer = Adam(model.image_encoder.parameters(), lr=1e-4, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
@@ -45,13 +43,13 @@ model_checkp = ModelCheckpoint(sam_lora)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # Set model to train and into the device
+model.train()
 model.to(device)
 
 total_loss = []
 
 for epoch in range(num_epochs):
     epoch_losses = []
-    model.train()
 
     for i, batch in enumerate(tqdm(train_dataloader)):
       
