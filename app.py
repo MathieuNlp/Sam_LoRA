@@ -18,7 +18,7 @@ colors = (255, 0, 0)
 # SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
 sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])
-sam_lora.load_lora_parameters("lora.safetensors")
+sam_lora.load_lora_parameters(f"./lora_weights/lora_rank{sam_lora.rank}.safetensors")
 sam_lora.sam.to(device)
 predictor = SamPredictor(sam_lora.sam)
 # Acceleration and reduction memory techniques
