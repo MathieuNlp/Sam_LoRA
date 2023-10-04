@@ -7,13 +7,11 @@ class ModelCheckpoint:
     def __init__(self, model):
         self.min_loss = None
         self.model = model
-        self.saved_A_weights = None
-        self.saved_B_weights = None
+        self.epoch = None
 
-    def update(self, loss):
+    def update(self, loss, epoch):
         if (self.min_loss is None) or (loss < self.min_loss):
             self.min_loss = loss
-            self.saved_A_weights = self.model.A_weights
-            self.saved_B_weights = self.model.B_weights
+            self.epoch = epoch
 
             
