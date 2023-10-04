@@ -22,7 +22,6 @@ with open("./config.yaml", "r") as ymlfile:
 
 # Take dataset path
 train_dataset_path = config_file["DATASET"]["TRAIN_PATH"]
-train_dataset_path = config_file["DATASET"]["VALID_PATH"]
 # Load SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
 #Create SAM LoRA
