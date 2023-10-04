@@ -81,6 +81,7 @@ for epoch in range(num_epochs):
     print(f'EPOCH: {epoch}')
     print(f'Mean loss training: {mean(epoch_losses)}')
     print(f'Mean loss validation : {valid_loss/2}')
+    torch.cuda.empty_cache()
 
 
 
