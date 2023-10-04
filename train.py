@@ -15,7 +15,6 @@ from src.lora import LoRA_sam
 import matplotlib.pyplot as plt
 import yaml
 import torch.nn.functional as F
-from src.model_checkpoint import ModelCheckpoint
 
 # Load the config file
 with open("./config.yaml", "r") as ymlfile:
@@ -38,8 +37,6 @@ train_dataloader = DataLoader(train_ds, batch_size=config_file["TRAIN"]["BATCH_S
 optimizer = Adam(model.image_encoder.parameters(), lr=1e-4, weight_decay=0)
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
-
-model_checkp = ModelCheckpoint(sam_lora)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # Set model to train and into the device
