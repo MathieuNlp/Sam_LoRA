@@ -14,7 +14,7 @@ from torchvision.transforms import ToTensor
 sam_checkpoint = "sam_vit_b_01ec64.pth"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 sam = build_sam_vit_b(checkpoint=sam_checkpoint)
-rank =4
+rank = 64
 sam_lora = LoRA_sam(sam, rank)
 sam_lora.load_lora_parameters(f"./lora_weights/lora_rank{rank}.safetensors")
 model = sam_lora.sam
@@ -88,7 +88,7 @@ annotations = json.load(f)
 
 train_set = annotations["train"]
 test_set = annotations["test"]
-inference_train = True
+inference_train = False
 
 if inference_train:
     total_loss = []
