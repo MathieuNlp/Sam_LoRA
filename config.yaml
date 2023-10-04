@@ -1,5 +1,6 @@
 DATASET:
   TRAIN_PATH: "./dataset/train"
+  VALID_PATH: "./dataset/valid"
   TEST_PATH: "./dataset/test"
 
 SAM:

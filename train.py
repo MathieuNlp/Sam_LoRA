@@ -15,6 +15,7 @@ from src.lora import LoRA_sam
 import matplotlib.pyplot as plt
 import yaml
 import torch.nn.functional as F
+from src.model_checkpoint import ModelCheckpoint
 
 # Load the config file
 with open("./config.yaml", "r") as ymlfile:
@@ -22,65 +23,75 @@ with open("./config.yaml", "r") as ymlfile:
 
 # Take dataset path
 train_dataset_path = config_file["DATASET"]["TRAIN_PATH"]
-
+train_dataset_path = config_file["DATASET"]["VALID_PATH"]
 # Load SAM model
 sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
 #Create SAM LoRA
 sam_lora = LoRA_sam(sam, config_file["SAM"]["RANK"])  
 model = sam_lora.sam
-# model = sam
-# for name, param in model.named_parameters():
-#   if name.startswith("vision_encoder") or name.startswith("prompt_encoder"):
-#     param.requires_grad_(False)
-
 # Process the dataset
 processor = Samprocessor(model)
-dataset = DatasetSegmentation(config_file, processor)
-
+train_ds = DatasetSegmentation(config_file, processor, model="train")
+valid_ds = DatasetSegmentation(config_file, processor, model="valid")
 # Create a dataloader
-train_dataloader = DataLoader(dataset, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
-
+train_dataloader = DataLoader(train_ds, batch_size=config_file["TRAIN"]["BATCH_SIZE"], shuffle=True, collate_fn=collate_fn)
+valid_dataloader = DataLoader(valid_ds, batch_size=1, shuffle=True, collate_fn=collate_fn)
 # Initialize optimize and Loss
 optimizer = Adam(model.image_encoder.parameters(), lr=1e-4, weight_decay=0)
-
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
-
 num_epochs = config_file["TRAIN"]["NUM_EPOCHS"]
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+model_checkp = ModelCheckpoint(sam_lora)
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
 # Set model to train and into the device
-model.train()
 model.to(device)
 
 total_loss = []
 
 for epoch in range(num_epochs):
     epoch_losses = []
+    model.train()
+
     for i, batch in enumerate(tqdm(train_dataloader)):
       
       outputs = model(batched_input=batch,
-            multimask_output=False)
+                      multimask_output=False)
       
-      
-      list_gt_msk, list_pred_msk, list_bbox = utils.get_list_masks(batch, outputs)
-      if epoch % 10 == 0:
-        utils.tensor_to_image(list_gt_msk, list_pred_msk, list_bbox, i, config_file["TRAIN"]["BATCH_SIZE"])
-      print()
       gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
       loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
-      total_loss.append(loss)
       
       optimizer.zero_grad()
       loss.backward()
-
       # optimize
       optimizer.step()
       epoch_losses.append(loss.item())
          
+    model.eval()
+    valid_loss = 0
+    for i, valid_batch in enumerate(tqdm(valid_dataloader)):
+       
+      valid_outputs = model(batched_input=valid_batch,
+                      multimask_output=False)
+      valid_gt_mask_tensor = valid_batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
+      valid_loss += seg_loss(valid_outputs[0]["low_res_logits"], valid_gt_mask_tensor.float().to(device))
+    model_checkp.update(valid_loss)
+    print(valid_loss)
 
     print(f'EPOCH: {epoch}')
-    print(f'Mean loss: {mean(epoch_losses)}')
+    print(f'Mean loss training: {mean(epoch_losses)}')
+    print(f'Mean loss validation : {valid_loss/2}')
+
+
+
+
+
+
+
+
+
+
+
 
 # Save the parameters of the model in safetensors format
 rank = config_file["SAM"]["RANK"]
