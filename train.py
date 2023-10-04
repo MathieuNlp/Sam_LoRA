@@ -73,8 +73,8 @@ for epoch in range(num_epochs):
        
       valid_outputs = model(batched_input=valid_batch,
                       multimask_output=False)
-      valid_gt_mask_tensor = valid_batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
-      valid_loss += seg_loss(valid_outputs[0]["low_res_logits"], valid_gt_mask_tensor.float().to(device))
+      gt_mask_tensor = valid_batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
+      valid_loss += seg_loss(valid_outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
     model_checkp.update(valid_loss, epoch)
     print(valid_loss)
 
