@@ -66,21 +66,9 @@ for epoch in range(num_epochs):
       # optimize
       optimizer.step()
       epoch_losses.append(loss.item())
-         
-    model.eval()
-    valid_loss = 0
-    for i, valid_batch in enumerate(tqdm(valid_dataloader)):
-       
-      valid_outputs = model(batched_input=valid_batch,
-                      multimask_output=False)
-      gt_mask_tensor = valid_batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
-      valid_loss += seg_loss(valid_outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
-    model_checkp.update(valid_loss, epoch)
-    print(valid_loss)
 
     print(f'EPOCH: {epoch}')
     print(f'Mean loss training: {mean(epoch_losses)}')
-    print(f'Mean loss validation : {valid_loss/2}')
 
 # Save the parameters of the model in safetensors format
 rank = config_file["SAM"]["RANK"]
