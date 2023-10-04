@@ -1,10 +1,10 @@
 import numpy as np
 import torch
-import lora 
+
 
 class ModelCheckpoint:
 
-    def __init__(self, model: lora.LoRA_sam):
+    def __init__(self, model):
         self.min_loss = None
         self.model = model
         self.saved_A_weights = None
