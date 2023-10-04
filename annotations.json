@@ -5,11 +5,14 @@
 "ring2.jpg": {"mask_path":"./dataset/train/masks/ring2.jpg", "bbox": [569, 239, 1286, 944]},
 "ring3.jpg": {"mask_path":"./dataset/train/masks/ring3.jpg", "bbox": [135, 68, 466, 415]},
 "ring4.jpg": {"mask_path":"./dataset/train/masks/ring4.jpg", "bbox": [133, 234, 1085, 718]},
-"ring5.jpg": {"mask_path":"./dataset/train/masks/ring5.jpg", "bbox": [163, 197, 477, 597]}
+"ring5.jpg": {"mask_path":"./dataset/train/masks/ring5.jpg", "bbox": [163, 197, 477, 597]},
+"ring6.jpg": {"mask_path":"./dataset/train/masks/ring6.jpg", "bbox": [12, 30, 438, 288]},
+"ring7.jpg": {"mask_path":"./dataset/train/masks/ring7.jpg", "bbox": [4, 11, 789, 438]},
+"ring8.jpg": {"mask_path":"./dataset/train/masks/ring8.jpg", "bbox": [185, 83, 621, 639]}
 },
 "test": 
-{"ring_test_1.jpg" : {"bbox": [74, 351, 936, 649]},
-"ring_test_2.jpg" : {"bbox": [138, 196, 508, 610]}
+{"ring_test_1.jpg" : {"mask_path":"./dataset/test/masks/ring_test_1.jpg", "bbox": [74, 351, 936, 649]},
+"ring_test_2.jpg" : {"mask_path":"./dataset/test/masks/ring_test_2.jpg", "bbox": [138, 196, 508, 610]}
 }
 
 }

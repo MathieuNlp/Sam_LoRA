@@ -40,13 +40,6 @@ class DatasetSegmentation(Dataset):
             for img_path in self.img_files:
                 self.mask_files.append(os.path.join(config_file["DATASET"]["TRAIN_PATH"],'masks', os.path.basename(img_path)[:-4] + ".jpg")) 
 
-        elif mode == "valid":
-
-            self.img_files = glob.glob(os.path.join(config_file["DATASET"]["VALID_PATH"],'images','*.jpg'))
-            self.mask_files = []
-            for img_path in self.img_files:
-                self.mask_files.append(os.path.join(config_file["DATASET"]["VALID_PATH"],'masks', os.path.basename(img_path)[:-4] + ".jpg"))
-
         else:
             self.img_files = glob.glob(os.path.join(config_file["DATASET"]["TEST_PATH"],'images','*.jpg'))
             self.mask_files = []
