@@ -45,13 +45,39 @@ To get our baseline with the dataset, we will first see the capabilities of SAM 
 As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble rightly segment the jewelry. To solve this problem, we can fine-tune the model. But there exists efficient ways to fine-tuned large pre-trained models.
 
 # Adapters
+The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into chosen blocks of the frozen model and is trained. The training of adapters enable the adapted model to solve specific downstream task.This method can help solving our problem to a relatively low computing cost.
 
+![SAM Architecture](./docs/images/sam_archi.png)
+*SAM model architecture, source: Benjamin Trom - Finegrain AI*
 
+For my model, I chose to use LoRA adapters.
 
+## LoRA
+LoRA is an adapter that is using 2 matrices B and A. The 2 matrices have specific dimensions (input_size, r) and (r, input_size) . By specefiying a rank r < input_size, we reduce the parameters size and try to capture the downstream task with a small enough rank. By doing the dot product B*A, we get a matrix of shape (input_size, input_size) so no information is lost. 
 
+We only need to initialize the matrices, freeze SAM and tune the matrices components so that the frozen model + LoRA adapter model learns to segment rings.
 
+# SAM LoRA
+To apply LoRA to SAM, I had to choose a block to apply our adapter. I chose the image encoder because it could be interesting to tune the block that “understand”/encode the images. My LoRA implementation is adapting the **attention modules (queries and values)** of the ViT base by adding 2 nn.Linear in chain after computing queries and values (equivalent of B*A matrices product).
 
+![SAM Architecture](./docs/images/sam_lora_archi.png)
+*SAM + LoRA adaption*
 
+Next I will explain the pipeline to train the model.
+
+# Preprocessing
+In the original model, a class “SamPredictor” is built to setup an image and predict. However, with this method, we can’t use a batching approach. Therefore, I created a class (Samprocessor) that preprocesses the datasets so that we can use batching for the training. 
+
+## Dataloader
+```
+   /src/dataloader.py
+```
+
+## Processor
+
+```
+   /src/processor.py
+```
 
 
 
