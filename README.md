@@ -102,6 +102,7 @@ In the dataloader, the processor (Samprocessor class) tranforms the image and pr
 
 # Metrics
 I used the Dice Loss to compute the results on the test set. By computing the dice loss, we have access to the Dice similarity coefficient (DSC) by doing: Dice coeff = 1 - Dice Loss.
+
 The dice coefficient gauge the similarity of 2 samples. It is calculated from precision and call (similar to F1-score).
 The loss is documented on this website: [Dice loss](https://docs.monai.io/en/stable/losses.html)
 
