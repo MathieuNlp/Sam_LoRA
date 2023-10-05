@@ -86,8 +86,8 @@ def get_bounding_box(ground_truth_map: np.array) -> list:
   return bbox
 
 
-def stacking_batch(batch, preds):
+def stacking_batch(batch, outputs):
     stk_gt = torch.stack([b["ground_truth_mask"] for b in batch], dim=0)
-    stk_out = torch.stack([p["masks"] for p in preds], dim=0)
+    stk_out = torch.stack([out["low_res_logits"] for out in outputs], dim=0)
         
     return stk_gt, stk_out
