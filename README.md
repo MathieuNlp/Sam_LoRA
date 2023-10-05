@@ -34,13 +34,16 @@ The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. 
 *SAM architecture from paper: https://arxiv.org/abs/2304.02643*
 
 To get our baseline with the dataset, we will first see the capabilities of SAM with zero-shot inference. 
+![Baseline preds train set](./docs/images/baseline_train_prediction.png)
+*Baseline SAM predictions on training set*
+
 
 ![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
 *Baseline SAM predictions on test set*
 
 
-![Baseline preds train set](./docs/images/baseline_train_prediction.png)
-*Baseline SAM predictions on training set*
+
+
 
 As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. Now that we have assed the baseline model, how could we solve this issue ?
 
