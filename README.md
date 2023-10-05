@@ -37,7 +37,7 @@ To get our baseline with the dataset, we will first see the capabilities of SAM 
 
 ![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
 *Baseline SAM predictions on test set*
-\
+\\
 ![Baseline preds train set](./docs/images/baseline_train_prediction.png)
 *Baseline SAM predictions on training set*
 
