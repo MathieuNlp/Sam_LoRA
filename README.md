@@ -100,14 +100,12 @@ In the dataloader, the processor (Samprocessor class) tranforms the image and pr
 *Processor transformation applied to image and prompt*
 
 
-
-
 # Metrics
-I used the Dice Loss to compute the results on the test set. By computing the dice loss, we have access to the dice coefficient by doing Dice coeff = 1 - Dice Loss.
+I used the Dice Loss to compute the results on the test set. By computing the dice loss, we have access to the Dice similarity coefficient (DSC) by doing: Dice coeff = 1 - Dice Loss.
+The dice coefficient gauge the similarity of 2 samples. It is calculated from precision and call (similar to F1-score).
+The loss is documented on this website: [Dice loss](https://docs.monai.io/en/stable/losses.html)
 
-Thus the lower the dice loss the better the model will perform.
-
-The loss is documented on this website: https://docs.monai.io/en/stable/losses.html
+# Model selection
 
 ## Poetry
 All the dependecies are managed with poetry.
