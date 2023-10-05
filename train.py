@@ -51,7 +51,8 @@ for epoch in range(num_epochs):
       
       outputs = model(batched_input=batch,
                       multimask_output=False)
-      
+      stk_gt, stk_out = utils.stacking_batch(batch, outputs)
+      print(stk_gt.shape, stk_out.shape)
       gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0) # We need to get the [B, C, H, W] starting from [H, W]
       loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
       
