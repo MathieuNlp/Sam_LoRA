@@ -57,7 +57,7 @@ LoRA is an adapter that is using 2 matrices B and A. The 2 matrices have specifi
 
 We only need to initialize the matrices, freeze SAM and tune the matrices components so that the frozen model + LoRA adapter model learns to segment rings.
 
-# SAM LoRA
+## SAM LoRA
 To apply LoRA to SAM, I had to choose a block to apply our adapter. I chose the image encoder because it could be interesting to tune the block that “understand”/encode the images. My LoRA implementation is adapting the **attention modules (queries and values)** of the ViT base by adding 2 nn.Linear in chain after computing queries and values (equivalent of B*A matrices product).
 
 ![SAM Architecture](./docs/images/sam_lora_archi.png)
