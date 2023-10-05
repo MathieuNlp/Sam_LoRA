@@ -24,18 +24,22 @@ The dataset for train and test are in :
 ```
    ./dataset
 ```
-![Alt text](relative%./docs/images/test_set.png?raw=true "Test set")
+![Test set](./docs/images/test_set.png)
+*Test set*
 
 # Baseline SAM
 The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
 
-![Alt text](relative%./docs/images/sam_archi.png?raw=true "SAM Architecture")
+![SAM Architecture Paper](./docs/images/sam_archi.png)
+*SAM architecture from paper: https://arxiv.org/abs/2304.02643*
 
 To get our baseline with the dataset, we will first see the capabilities of SAM with zero-shot inference. 
 
-![Alt text](relative%./docs/images/baseline_test_set_prediction.png?raw=true "Baseline SAM on test set")
+![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
+*Baseline SAM predictions on test set*
 
-![Alt text](relative%./docs/images/baseline_train_set_prediction.png?raw=true "Baseline SAM on training examples")
+![Baseline preds train set](./docs/images/baseline_train_set_prediction.png)
+*Baseline SAM predictions on training set*
 
 As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. Now that we have assed the baseline model, how could we solve this issue ?
 
