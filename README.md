@@ -42,7 +42,7 @@ To get our baseline with the dataset, we will first see the capabilities of SAM 
 *Baseline SAM predictions on test set*
 
 
-As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble rightly segment the jewelry. How can we use SAM to solve our issue ? 
+As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble rightly segment the jewelry. To solve this problem, we can fine-tune the model. But there is a efficient way to fine-tuned large pre-trained models.
 
 # Adapters
 
