@@ -107,6 +107,13 @@ The dice coefficient gauge the similarity of 2 samples. It is calculated from pr
 The loss is documented on this website: [Dice loss](https://docs.monai.io/en/stable/losses.html)
 
 # Model selection
+I created 10 models which correspond to SAM LoRA with different ranks. The ranks are: [2, 4, 6, 8, 16, 32, 64, 128, 256, 512].
+Each models will be trained and evaluated on the test set. 
+
+## Limitation
+I trained the models on colab free. I was only able to give a batch size of 1 although the code accept batch size > 1. Furthermore, I couldn’t do a validation set with early stopping because I would be out of memory. Hence, I trained the models for 50 epochs (chosen arbitrairly) and compared there dice loss on the test set.
+
+
 
 ## Poetry
 All the dependecies are managed with poetry.
