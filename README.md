@@ -1,23 +1,62 @@
-# Segment Anything model fine tuned with LoRA for product packshots
+# Segment Your Ring (SYR) - Segment Anything to segment rings (jewelery)
 
-In this project, we use the Segment Anything model released by Meta to capture masks of product packshots. This is challenging because some images can have shadows, reflections or even logos that needs to be taken into account.
+# Introduction
 
-## Segment Anything & LoRA
+Segment anything is a foundational model released by Meta ([SAM](https://segment-anything.com/)). Pre-trained over 1 billion images, the model shows high performance zero-shot inference.
 
-I chose the **vitb** image encoder. I applied LoRA to the attention modules inside the image encoder. I focused on queries and values as the LoRA (paper suggest that it is better).
-I used bounding boxes for the input prompts.
+[Alt text](relative%./docs/images/dog_segmented.png?raw=true "Test set")
 
-# Setup
-Get the repo with:
-```sh
-   git clone https://github.com/MathieuNlp/Sam_LoRA.git
+As good as they are, pre-trained models cannot answer to every segmentation tasks. The model has a large understanding of everything but situation-wise, it can be compromised. I would like to dig deeper in this problem by applying SAM to product packshots. 
+Product packshots are mainly done with a unicolor background and the object upfront. Those images tends to have less noise and SAM should be performing really well in contrast of some city image with lots of information. However, we will that it's still a challenging problem.
+
+# Problem
+Can we segment jewelery rings used for product packshots ?
+
+# Dataset
+I built a dataset of 2 different rings with white background. The 2 types of rings are:
+- Single ring
+- Pair rings
+The single rings have different views and a jewel in it. We can find silver and gold single rings.
+The pair rings are 2 rings with one on top of the other. The outline of this can be challenging to segment.
+In the training set, I tried to equally split both type of rings. The test set is constitued of 2 images, a single ring and a pair rings.
+The dataset for train and test are in :
 ```
-# Demo
-A gradio demo available. You can load your image and place 2 points to form a boudning box. After that run the generation of the mask.
-```sh
-   demo.ipynb
+   ./dataset
 ```
-# Local Run
+[Alt text](relative%./docs/images/test_set.png?raw=true "Test set")
+
+# Baseline SAM
+The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
+
+[Alt text](relative%./docs/images/sam_archi.png?raw=true "SAM Architecture")
+
+To get our baseline with the dataset, we will first see the capabilities of SAM with zero-shot inference. 
+
+[Alt text](relative%./docs/images/baseline_test_set_prediction.png?raw=true "Baseline SAM on test set")
+
+[Alt text](relative%./docs/images/baseline_train_set_prediction.png?raw=true "Baseline SAM on training examples")
+
+As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. Now that we have assed the baseline model, how could we solve this issue ?
+
+# Adapters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Config file
 There is a config file listing the hyperparameters to tune the model and some paths.
@@ -64,10 +103,11 @@ The plots folder regroup some comparaison and results to visualize the results.
 - **pred_perfume2_no_training.jpg**: Original image and predicted mask visualisation
 
 
-# Sources
+# Acknowledgments
 Thank you to:
-- HuggingFace: https://github.com/NielsRogge/Transformers-Tutorials/blob/master/SAM/Fine_tune_SAM_(segment_anything)_on_a_custom_dataset.ipynb
+- Niels Rogge - HuggingFace: https://github.com/NielsRogge/Transformers-Tutorials/blob/master/SAM/Fine_tune_SAM_(segment_anything)_on_a_custom_dataset.ipynb
 - JamesQFreeman: https://github.com/JamesQFreeman/Sam_LoRA
+- Denis Brulé, Benjamin Trom - Finegrain AI
 
 # Author
 Mathieu Nalpon
