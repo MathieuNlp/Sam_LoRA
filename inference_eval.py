@@ -30,7 +30,6 @@ with open("./config.yaml", "r") as ymlfile:
 rank_list = [2, 4, 6, 8, 16, 32, 64, 128, 256, 512]
 rank_loss = []
 # Load SAM model
-seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')
 with torch.no_grad():
     for rank in rank_list:
         sam = build_sam_vit_b(checkpoint=config_file["SAM"]["CHECKPOINT"])
