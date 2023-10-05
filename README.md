@@ -1,4 +1,4 @@
-# Segment Your Ring (SYR) - Segment Anything to segment rings (jewelery)
+# Segment Your Ring (SYR) - Segment Anything to segment rings (jewelry)
 
 # Introduction
 
@@ -11,7 +11,7 @@ As good as they are, pre-trained models cannot answer to every segmentation task
 Product packshots are mainly done with a unicolor background and the object upfront. Those images tends to have less noise and SAM should be performing really well in contrast of some city image with lots of information. However, we will that it's still a challenging problem.
 
 # Problem
-Can we segment jewelery rings used for product packshots ?
+Can we segment jewelry rings used for product packshots ?
 
 # Dataset
 I built a dataset of 2 different rings with white background. The 2 types of rings are:
@@ -42,10 +42,7 @@ To get our baseline with the dataset, we will first see the capabilities of SAM 
 *Baseline SAM predictions on test set*
 
 
-
-
-
-As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. Now that we have assed the baseline model, how could we solve this issue ?
+As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble rightly segment the jewelry. How can we use SAM to solve our issue ? 
 
 # Adapters
 
