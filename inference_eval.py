@@ -17,6 +17,10 @@ import yaml
 import torch.nn.functional as F
 import monai
 import numpy as np
+"""
+This file compute the evaluation metric (Dice cross entropy loss) for all trained LoRA SAM with different ranks. This gives the plot that is in ./plots/rank_comparison.jpg
+which compares the performances on test the test set.
+"""
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction='mean')

@@ -58,6 +58,14 @@ class LoRA_sam(nn.Module):
     """
     Class that takes the image encoder of SAM and add the lora weights to the attentions blocks
 
+    Arguments:
+        sam_model: Sam class of the segment anything model
+        rank: Rank of the matrix for LoRA
+        lora_layer: List of weights exisitng for LoRA
+    
+    Return:
+        None
+
     """
 
     def __init__(self, sam_model: Sam, rank: int, lora_layer=None):
@@ -112,6 +120,9 @@ class LoRA_sam(nn.Module):
 
 
     def reset_parameters(self):
+        """
+        Initialize the LoRA A and B matrices like in the paper
+        """
         # Initalisation like in the paper
         for w_A in self.A_weights:
             nn.init.kaiming_uniform_(w_A.weight, a=np.sqrt(5))
@@ -120,7 +131,15 @@ class LoRA_sam(nn.Module):
 
 
     def save_lora_parameters(self, filename: str):
-        "save lora and fc parameters"
+        """
+        Save the LoRA wieghts applied to the attention model as safetensors.
+
+        Arguments:
+            filenmame: Name of the file that will be saved
+        
+        Return:
+            None: Saves a safetensors file
+        """
         num_layer = len(self.A_weights)
         # sufix 03:d -> allows to have a name 1 instead of 001
         a_tensors = {f"w_a_{i:03d}": self.A_weights[i].weight for i in range(num_layer)}
@@ -130,7 +149,15 @@ class LoRA_sam(nn.Module):
 
 
     def load_lora_parameters(self, filename: str):
-        "load lora and fc parameters"
+        """
+        Load a safetensor file of LoRA weights for the attention modules
+
+        Arguments:
+            filename: Name of the file containing the saved weights
+        
+        Return:
+            None: Loads the weights to the LoRA_sam class
+        """
         with safe_open(filename, framework="pt") as f:
             for i, w_A_linear in enumerate(self.A_weights):
                 saved_key = f"w_a_{i:03d}"
