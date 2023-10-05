@@ -4,7 +4,7 @@
 
 Segment anything is a foundational model released by Meta ([SAM](https://segment-anything.com/)). Pre-trained over 1 billion images, the model shows high performance zero-shot inference.
 
-[Alt text](relative%./docs/images/dog_segmented.png?raw=true "Test set")
+![Dog segmentation](relative%./docs/images/dog_segmented.png?raw=true "Test set")
 
 As good as they are, pre-trained models cannot answer to every segmentation tasks. The model has a large understanding of everything but situation-wise, it can be compromised. I would like to dig deeper in this problem by applying SAM to product packshots. 
 Product packshots are mainly done with a unicolor background and the object upfront. Those images tends to have less noise and SAM should be performing really well in contrast of some city image with lots of information. However, we will that it's still a challenging problem.
@@ -23,18 +23,18 @@ The dataset for train and test are in :
 ```
    ./dataset
 ```
-[Alt text](relative%./docs/images/test_set.png?raw=true "Test set")
+![Alt text](relative%./docs/images/test_set.png?raw=true "Test set")
 
 # Baseline SAM
 The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
 
-[Alt text](relative%./docs/images/sam_archi.png?raw=true "SAM Architecture")
+![Alt text](relative%./docs/images/sam_archi.png?raw=true "SAM Architecture")
 
 To get our baseline with the dataset, we will first see the capabilities of SAM with zero-shot inference. 
 
-[Alt text](relative%./docs/images/baseline_test_set_prediction.png?raw=true "Baseline SAM on test set")
+![Alt text](relative%./docs/images/baseline_test_set_prediction.png?raw=true "Baseline SAM on test set")
 
-[Alt text](relative%./docs/images/baseline_train_set_prediction.png?raw=true "Baseline SAM on training examples")
+![Alt text](relative%./docs/images/baseline_train_set_prediction.png?raw=true "Baseline SAM on training examples")
 
 As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. Now that we have assed the baseline model, how could we solve this issue ?
 
