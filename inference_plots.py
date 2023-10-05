@@ -90,7 +90,7 @@ annotations = json.load(f)
 
 train_set = annotations["train"]
 test_set = annotations["test"]
-inference_train = False
+inference_train = True
 
 if inference_train:
 
