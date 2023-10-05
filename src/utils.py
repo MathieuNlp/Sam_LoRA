@@ -87,6 +87,17 @@ def get_bounding_box(ground_truth_map: np.array) -> list:
 
 
 def stacking_batch(batch, outputs):
+    """
+    Given the batch and outputs of SAM, stacks the tensors to compute the loss. We stack by adding another dimension.
+
+    Arguments:
+        batch(list(dict)): List of dict with the keys given in the dataset file
+        outputs: list(dict): List of dict that are the outputs of SAM
+    
+    Return: 
+        stk_gt: Stacked tensor of the ground truth masks in the batch. Shape: [batch_size, H, W] -> We will need to add the channels dimension (dim=1)
+        stk_out: Stacked tensor of logits mask outputed by SAM. Shape: [batch_size, 1, 1, H, W] -> We will need to remove the extra dimension (dim=1) needed by SAM 
+    """
     stk_gt = torch.stack([b["ground_truth_mask"] for b in batch], dim=0)
     stk_out = torch.stack([out["low_res_logits"] for out in outputs], dim=0)
         
