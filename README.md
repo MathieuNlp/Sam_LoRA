@@ -68,24 +68,31 @@ Next I will explain the pipeline to train the model.
 # Preprocessing
 In the original model, a class “SamPredictor” is built to setup an image and predict. However, with this method, we can’t use a batching approach. Therefore, I created a class (Samprocessor) that preprocesses the datasets so that we can use batching for the training. 
 
+![Pre processing pipe](./docs/images/preprocessing_pipeline.png)
+*Preprocessing pipeline*
+
+
 ## Dataloader
 ```
    /src/dataloader.py
 ```
+The Sam model requires as input a list(dict) object for batch training. To do this, I to created a dataloader that would generate this object. The dictionnary should contain 3 keys: 
+- image: The processed image
+- boxes: The processed prompt (here bounding box coordinates)
+- original_size: The size of the image before transformation (used to transform the image back to the original size after predictions)
+
+I added 2 keys:
+- prompt: The bounding box coordinates before transformation
+- ground_truth_mask: The ground truth mask
 
 ## Processor
-
 ```
    /src/processor.py
 ```
+In the dataloader, the processor (Samprocessor class) tranforms the image and prompt so that both are prepared for the image encoder and prompt encoder. It will output the dictionnary containing the keys image, boxes and prompt.
 
-
-
-
-
-
-
-
+![Processor inside](./docs/images/processor_inside.png)
+*Processor transformation applied to image and prompt*
 
 
 
