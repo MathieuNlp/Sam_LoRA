@@ -30,7 +30,7 @@ The dataset for train and test are in :
 # Baseline SAM
 The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
 
-![SAM Architecture Paper](./docs/images/sam_archi.png)
+![SAM Architecture Paper](./docs/images/sam_paper.png)
 *SAM architecture from paper: https://arxiv.org/abs/2304.02643*
 
 To get our baseline with the dataset, we will first see the capabilities of SAM with zero-shot inference. 
