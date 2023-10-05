@@ -70,15 +70,13 @@ In the original model, a class “SamPredictor” is built to setup an image and
 
 The image go trough a longest stride resize and is normalized. Then the image is reshaped to 1024x1024 for the input encoder. Prompt needs to follow the resizing, therefore new coordinates are computed. The resized images and prompts are then passed to the mask decoder that outputs the mask with the highest IoU probability.
 
-Note: normalization of the image and reshape to 1024x1024 is done in:
-
-```
-   /src/segment_anything/modeling/sam
-```
-
 ![Pre processing pipe](./docs/images/preprocessing_pipeline.png)
 *Preprocessing pipeline*
 
+Note: normalization of the image and reshape to 1024x1024 is done in:
+```
+   /src/segment_anything/modeling/sam
+```
 ## Dataloader
 ```
    /src/dataloader.py
