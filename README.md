@@ -68,9 +68,16 @@ Next I will explain the pipeline to train the model.
 # Preprocessing
 In the original model, a class “SamPredictor” is built to setup an image and predict. However, with this method, we can’t use a batching approach. Therefore, I created a class (Samprocessor) that preprocesses the datasets so that we can use batching for the training. 
 
+The image go trough a longest stride resize and is normalized. Then the image is reshaped to 1024x1024 for the input encoder. Prompt needs to follow the resizing, therefore new coordinates are computed. The resized images and prompts are then passed to the mask decoder that outputs the mask with the highest IoU probability.
+
+Note: normalization of the image and reshape to 1024x1024 is done in:
+
+```
+   /src/segment_anything/modeling/sam
+```
+
 ![Pre processing pipe](./docs/images/preprocessing_pipeline.png)
 *Preprocessing pipeline*
-
 
 ## Dataloader
 ```
@@ -97,11 +104,12 @@ In the dataloader, the processor (Samprocessor class) tranforms the image and pr
 
 
 
-## Config file
-There is a config file listing the hyperparameters to tune the model and some paths.
-`
-   config.yaml
-`
+# Metrics
+I used the Dice Loss to compute the results on the test set. By computing the dice loss, we have access to the dice coefficient by doing Dice coeff = 1 - Dice Loss.
+
+Thus the lower the dice loss the better the model will perform.
+
+The loss is documented on this website: https://docs.monai.io/en/stable/losses.html
 
 ## Poetry
 All the dependecies are managed with poetry.
