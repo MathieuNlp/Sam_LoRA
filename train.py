@@ -55,8 +55,6 @@ for epoch in range(num_epochs):
       stk_gt, stk_out = utils.stacking_batch(batch, outputs)
       stk_out = stk_out.squeeze(1)
       stk_gt = stk_gt.unsqueeze(1) # We need to get the [B, C, H, W] starting from [H, W]
-      print(stk_gt.shape, stk_out.shape)
-      print("***"*30)
       loss = seg_loss(stk_out, stk_gt.float().to(device))
       
       optimizer.zero_grad()
