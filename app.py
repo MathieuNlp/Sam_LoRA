@@ -10,7 +10,7 @@ import yaml
 import cv2
 import torch
 
-with open("../config.yaml", "r") as ymlfile:
+with open("./config.yaml", "r") as ymlfile:
         config_file = yaml.load(ymlfile, Loader=yaml.Loader)
 
 device = device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -28,9 +28,7 @@ selected_pixels = []
 with gr.Blocks() as demo:
     with gr.Row():
         gr.Markdown(
-            '''# Stable SAM : Combinaison of Stable diffusion v1.5 and Segment Anything model for doing inpainting.
-            SD model: runwayml stable diffusion v1.5 inpainting
-            SAM: vit_b
+            f'''# Sam LoRA loaded with the rank {sam_lora.rank} for segmenting rings. The image encoder is vit_b.
             '''
         )
 
