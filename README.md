@@ -4,7 +4,7 @@
 
 Segment anything is a foundational model released by Meta ([SAM](https://segment-anything.com/)). Pre-trained over 1 billion images, the model shows high performance zero-shot inference.
 
-![Dog segmentation](./docs/images/dog_segmented.png "Test set")
+![Dog segmentation](./docs/images/dog_segmented.png)
 
 As good as they are, pre-trained models cannot answer to every segmentation tasks. The model has a large understanding of everything but situation-wise, it can be compromised. I would like to dig deeper in this problem by applying SAM to product packshots. 
 Product packshots are mainly done with a unicolor background and the object upfront. Those images tends to have less noise and SAM should be performing really well in contrast of some city image with lots of information. However, we will that it's still a challenging problem.
