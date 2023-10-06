@@ -120,7 +120,7 @@ I trained the models on colab free. I was only able to train with a batch size o
 I trained each models for 50 epochs (chosen arbitrairly), with a batch size of 1.
 
 ## Comparison
-![Model comparison rank](./docs/images/model_rank_comparison.jpg)
+![Model comparison rank](./docs/images/model_rank_comparison.jpg) \
 *Comparison of SAM LoRA for different ranks*
 
 As we can see, the best model is the rank 512. We see that the loss is decreasing has the rank rises.  However, we see a spike at rank 64 that is the worst model. This is an interesting behavior and maybe could be related to the fact that near this particular rank we loose understanding of something.
