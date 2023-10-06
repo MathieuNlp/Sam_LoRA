@@ -120,11 +120,6 @@ Firstly, the image go trough a longest stride resize and is normalized. Then the
 ![Pre processing pipe](./docs/images/preprocessing_pipeline.png)
 *Simplified preprocessing pipeline*
 
-Note: Normalization and reshape to 1024x1024 of the image is done in:
-```
-   /src/segment_anything/modeling/sam.py
-```
-Hence, the Samprocessor only need to do the longest stride resize and transform the coordinates of the bounding box.
 ## Dataloader
 ```
    /src/dataloader.py
@@ -142,11 +137,17 @@ I added 2 keys:
 ```
    /src/processor.py
 ```
+
 In the dataloader, the processor (Samprocessor class) tranforms the image and prompt so that both are prepared for the image encoder and prompt encoder. It will output the dictionnary containing the keys image, boxes and prompt.
+
+Note: Normalization and reshape to 1024x1024 of the image is done in:
+```
+   /src/segment_anything/modeling/sam.py
+```
+Hence, the Samprocessor only need to do the longest stride resize and transform the coordinates of the bounding box.
 
 ![Processor inside](./docs/images/processor_inside.png)
 *Simplified processor transformation applied to an image and a prompt*
-
 
 # Metrics
 To train and test the model performances on the test set, I used the Dice Loss. By computing the dice loss, we have access to the Dice Similarity Coefficient (DSC) by doing: Dice coeff = 1 - Dice Loss.
