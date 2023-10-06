@@ -177,7 +177,7 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
     │   ├── lora_rank64.safetensors
     │   ├── lora_rank128.safetensors
     │   ├── lora_rank256.safetensors
-    │   └──  lora_rank512.safetensors             
+    │   └── lora_rank512.safetensors             
     ├── plots
     │   ├── baseline
     │   │   ├── on_test
