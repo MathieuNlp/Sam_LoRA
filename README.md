@@ -159,7 +159,7 @@ The loss is documented on this website: [Dice loss](https://docs.monai.io/en/sta
 Now that our model and metric are defined. We can evaluate the effect of the rank on the segmentation.
 
 ## Limitation
-I trained the models on colab free. I was only able to train with a batch size of 1 although the code accepts a batch size greater than 1. Furthermore, I couldn’t add a validation set because I would be out of memory. With no validation, there is a risk of overfitting but given my constrains and to simplify, I supposed that the trained models will be the best models.
+I trained the models on colab free. I was only able to train with a batch size of 1 although it accepts a batch size greater than 1. Furthermore, I couldn’t add a validation set because I would be out of memory. With no validation, there is a risk of overfitting but given my constrains and to simplify, I supposed that the trained models will be the best models.
 
 I trained each models for 50 epochs (chosen arbitrairly), with a batch size of 1.
 
