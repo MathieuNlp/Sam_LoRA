@@ -119,6 +119,7 @@ I trained the models on colab free. I was only able to train with a batch size o
 
 I trained each models for 50 epochs (chosen arbitrairly), with a batch size of 1.
 
+## Comparison
 ![Model comparison rank](./docs/images/model_rank_comparison.jpg)
 *Comparison of SAM LoRA for different ranks*
 
