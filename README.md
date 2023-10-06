@@ -256,7 +256,7 @@ To run the training, use:
    poetry run python train.py
 ```
 
-# Run Inference
+# Run inference
 
 ## Plot inference
 To plot the inference of the model, run:
