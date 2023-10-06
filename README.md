@@ -161,7 +161,8 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
 
 # Conclusion/Discussion
 
-Using adapters 
+Using adapters we partialyl answer to the task of segmenting rings. In the demo examples we see that the model still struggles to caputre all the rings. This could be because the dataset is small (8 images).
+To upgrade the model, we can add checkpoint and early stopping during training to prevent from overfitting. In addition, do data augmentation to strengthen the model generalization, and increase the batch size if enough computation is available.
 
 # Folder layout
     .
