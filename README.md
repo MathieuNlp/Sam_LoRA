@@ -118,7 +118,7 @@ In the original model, a class “SamPredictor” is built to setup an image and
 Firstly, the image go trough a longest stride resize and is normalized. Then the image is reshaped to 1024x1024 for the input encoder. The prompt (bounding box) needs to follow the resizing, therefore new coordinates are computed. The resized images and prompts are then passed to the mask decoder that outputs the mask with the highest IoU probability. Finally, the mask is reshaped to the original size of the image.
 
 ![Pre processing pipe](./docs/images/preprocessing_pipeline.png)
-*Preprocessing pipeline*
+*Simplified preprocessing pipeline*
 
 Note: Normalization and reshape to 1024x1024 of the image is done in:
 ```
@@ -144,7 +144,7 @@ I added 2 keys:
 In the dataloader, the processor (Samprocessor class) tranforms the image and prompt so that both are prepared for the image encoder and prompt encoder. It will output the dictionnary containing the keys image, boxes and prompt.
 
 ![Processor inside](./docs/images/processor_inside.png)
-*Processor transformation applied to image and prompt*
+*Simplified processor transformation applied to an image and a prompt*
 
 
 # Metrics
