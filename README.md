@@ -18,7 +18,7 @@ I built a dataset of 2 different rings with white background. The 2 types of rin
 - Single ring
 - Pair rings
 
-The single rings have different views and some as a jewel on it. The material can also change between gold and silver.
+The single rings have different view angle and some as a jewel on it. The material can also change between gold and silver.
 The pair rings are 2 rings with one on top of the other. The outline of this can be challenging to segment. Same as the single ring, the material are either gold or silver.
 In the training set, I equally splited both type of rings. The test set is composed of 2 images: a single ring and a pair rings.
 
