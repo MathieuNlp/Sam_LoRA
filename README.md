@@ -156,7 +156,7 @@ The dice coefficient gauge the similarity of 2 samples. It is calculated from pr
 The loss is documented on this website: [Dice loss](https://docs.monai.io/en/stable/losses.html)
 
 # Model selection
-Now that our model is defined. We can evaluate the effect of the rank on the segmentation.
+Now that our model and metric are defined. We can evaluate the effect of the rank on the segmentation.
 
 ## Limitation
 I trained the models on colab free. I was only able to train with a batch size of 1 although the code accepts a batch size greater than 1. Furthermore, I couldn’t add a validation set because I would be out of memory. With no validation, there is a risk of overfitting but given my constrains and to simplify, I supposed that the trained models will be the best models.
