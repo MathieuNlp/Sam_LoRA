@@ -155,6 +155,10 @@ The demo can be launched by running the notebook:
 
 We can see some good segmentation like in demo 1 or demo 2 but it becomes more difficult whe, there is jewelry or reflection on the ring like on demo 4 and 3.
 
+# Conclusion/Discussion
+
+
+
 # Folder layout
     .
     ├── dataset
