@@ -22,7 +22,7 @@ The pair rings are 2 rings with one on top of the other. The outline of this can
 In the training set, I tried to equally split both type of rings. The test set is constitued of 2 images, a single ring and a pair rings.
 The dataset for train and test are in :
 ```
-   ./dataset
+   /dataset
 ```
 ![Test set](./docs/images/test_set.png)
 *Test set*
@@ -75,7 +75,7 @@ The image go trough a longest stride resize and is normalized. Then the image is
 
 Note: normalization of the image and reshape to 1024x1024 is done in:
 ```
-   /src/segment_anything/modeling/sam
+   /src/segment_anything/modeling/sam.py
 ```
 ## Dataloader
 ```
@@ -107,28 +107,105 @@ The dice coefficient gauge the similarity of 2 samples. It is calculated from pr
 The loss is documented on this website: [Dice loss](https://docs.monai.io/en/stable/losses.html)
 
 # Model selection
-I created 10 models which correspond to SAM LoRA with different ranks. The ranks are: [2, 4, 6, 8, 16, 32, 64, 128, 256, 512].
-Each models will be trained and evaluated on the test set. 
+Now that our model is defined. We can evaluate the effect of the rank on the model.
 
 ## Limitation
-I trained the models on colab free. I was only able to give a batch size of 1 although the code accept batch size > 1. Furthermore, I couldn’t do a validation set with early stopping because I would be out of memory. Hence, I trained the models for 50 epochs (chosen arbitrairly) and compared there dice loss on the test set.
+I trained the models on colab free. I was only able to train with a batch size of 1 although the code accepts a batch size > 1. Furthermore, I couldn’t add a validation set with early stopping because I would be out of memory. With no validation, there is a risk of overfitting but given my constrains and the number of epochs and the size of the model, we can suppose that the trained models will be the best models.
 
+I trained each models for 50 epochs (chosen arbitrairly), with a batch size of 1.
 
+![Model comparison rank](./docs/images/model_rank_comparison.jpg)
+*Comparison of SAM LoRA for different ranks*
 
-## Poetry
-All the dependecies are managed with poetry.
-```sh
-   cd sam_lora_poetry
-   poetry install 
+As we can see, the best model is the rank 512. We see that the loss is decreasing has the rank rises.  However, we see a spike at rank 64 that is the worst model. This is an interesting behavior and maybe could be related to the fact that near this particular rank we loose understanding of something.
+
+# Results of the worst model (rank 64)
+
+![Worst model test set](./docs/images/worst_model_on_test.png)
+*SAM LoRA rank 64 predictions on test set*
+
+This is confirmed here, we lost the understanding of double rings. 
+
+# Results of the best model (rank 512)
+![Best model test set](./docs/images/best_model_on_test.png)
+*SAM LoRA rank 512 predictions on test set*
+
+The best model has clearly a better understanding and answer the task of segmenting the rings.
+
+# Demo
+I did a gradio webui to test the best model on picked up images. I prepared a notebook to run the demo locally or in colab. Once loaded, you can upload you images and place 2 points that will form the prompt boundin box. Then, you can generate the mask.
+The demo can be launched by running the notebook:
 ```
-If there is an error with Pytorch, Safetensors or CV2, do:
-```sh
-   poetry run pip install opencv-python safetensors torch==1.12.1+cu116 torchvision==0.13.1+cu116 -f https://download.pytorch.org/whl/torch_stable.html
+   demo.ipynb
 ```
+## Results on some rings
+![Demo1](./docs/images/demo1.png)
+*Demo example 1*
+![Demo2](./docs/images/demo2.png)
+*Demo example 2*
+![Demo3](./docs/images/demo3.png)
+*Demo example 3*
+![Demo4](./docs/images/demo4.png)
+*Demo example 4*
+
+We can see some good segmentation like in demo 1 or demo 2 but it becomes more difficult whe, there is jewelry or reflection on the ring like on demo 4 and 3.
+
+# Folder layout
+    .
+    ├── dataset
+    │   ├── image_before_mask
+    │   ├── test
+    │   │   ├── images
+    │   │   ├── masks
+    │   ├── train
+    │   │   ├── images
+    │   │   ├── masks                 
+    ├── docs
+    │   ├── images      
+    ├── lora_weights
+    │   ├── lora_rank2.safetensors
+    │   ├── lora_rank4.safetensors
+    │   ├── lora_rank6.safetensors
+    │   ├── lora_rank8.safetensors
+    │   ├── lora_rank16.safetensors
+    │   ├── lora_rank32.safetensors
+    │   ├── lora_rank64.safetensors
+    │   ├── lora_rank128.safetensors
+    │   ├── lora_rank256.safetensors
+    │   ├── lora_rank512.safetensors             
+    ├── plots
+    │   ├── baseline
+    │   │   ├── on_test
+    │   │   ├── on_train
+    │   ├── best_model_rank_512
+    │   │   ├── on_test
+    │   │   ├── on_train
+    │   ├── worst_model_rank_64
+    │   │   ├── on_test
+    │   │   ├── on_train
+    │   ├── rank_comparison.jpg               
+    ├── src
+    │   ├── segment_anything
+    │   ├── dataloader.py
+    │   ├── lora.py
+    │   ├── processor.py
+    │   ├── utils.py        
+    ├── .gitignore
+    ├── annotations.json
+    ├── app.py
+    ├── config.yaml
+    ├── demo.ipynb
+    ├── inference_eval.py
+    ├── inference_plots.py
+    ├── poetry.lock
+    ├── pyproject.toml
+    ├── README.md
+    ├── sam_vit_b_01ec64.pth
+    ├── train.py
+    └── transform_to_mask.py
 
 
-
-## Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
+# Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
 ```sh
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 ```
