@@ -20,6 +20,7 @@ I built a dataset of 2 different rings with white background. The 2 types of rin
 The single rings have different views and some as a jewel on it. The material can also change between gold and silver.
 The pair rings are 2 rings with one on top of the other. The outline of this can be challenging to segment. Same as the single ring, the material are either gold or silver.
 In the training set, I equally splited both type of rings. The test set is composed of 2 images: a single ring and a pair rings.
+## Dataset folders
 The dataset for train and test can be found in:
 ```
    /dataset/train
@@ -27,6 +28,7 @@ The dataset for train and test can be found in:
 ```
    /dataset/test
 ```
+## Mask creation
 In each sets, we have the images and the masks. To create the masks, I used Paint3D to outline the image and putted a black background. The pre-transformed image masks are in:
 ```
    /dataset/image_before_mask
@@ -35,7 +37,7 @@ Then I passed each pre-transformed image masks into a function that convert it i
 ```
    transform_to_mask.py
 ```
-
+## Annotations
 I added an annotation file that groups the bounding box and ground truth mask for each images (for inference). During the training, I extracted the bounding boxes out of the ground truth masks.
 ```
    annotations.json
