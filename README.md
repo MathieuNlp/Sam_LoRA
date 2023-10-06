@@ -24,6 +24,11 @@ The dataset for train and test are in :
 ```
    /dataset
 ```
+The bounding boxes shown in the plots are stored in:
+```
+   annotations.json
+```
+
 ![Test set](./docs/images/test_set.png)
 *Test set*
 
@@ -206,7 +211,7 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
 
 
 # Setup
-The project use poetry.
+The project use python poetry.
 
 ```sh
    pip install poetry
@@ -219,7 +224,7 @@ The project use poetry.
 
 To install the dependencies use:
 ```sh
-   !poetry config virtualenvs.in-project false
+   poetry config virtualenvs.in-project false
 ```
 
 ```sh
@@ -228,7 +233,7 @@ To install the dependencies use:
 
 Some dependencies are not loaded with the poetry install, so I added them manually.
 ```sh
-   !poetry run pip install --upgrade torch torchvision gradio safetensors opencv-python monai
+   poetry run pip install --upgrade torch torchvision gradio safetensors opencv-python monai
 ```
 
 Download the image encoder checkpoint (vit-b)
