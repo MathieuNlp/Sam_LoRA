@@ -83,7 +83,8 @@ The lora adapter is in:
 ```sh
    /src/lora.py
 ```
-and to create an instance of SAM LoRA, you can call:
+
+To create an instance of SAM LoRA, you can call (ex. rank 8):
 ```python
    from src.lora import LoRA_sam
 
