@@ -306,7 +306,7 @@ Download the image encoder checkpoint (vit-b)
 ```
 
 # Run training
-Configure the model and path in the configuration file:
+Configure the model and paths in the configuration file:
 ```sh
    config.yaml
 ```
