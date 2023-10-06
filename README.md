@@ -209,7 +209,7 @@ To upgrade the model, we can add checkpoint and early stopping during training t
     ├── app.py                               # Script that define the gradio webui
     ├── config.yaml                          # Configuration file for paths, number of epochs and batch size
     ├── demo.ipynb                           # Demo notebook
-    ├── inference_eval.py                    # Plots the bat plot and compare the baseline model with othet LoRA models on test set
+    ├── inference_eval.py                    # Plots comparing baseline model with the LoRA models on test set
     ├── inference_plots.py                   # Plots the prediction on train or test set for a model (hard coded inside)
     ├── poetry.lock                          # Poetry lock file
     ├── pyproject.toml                       # Poetry toml file
