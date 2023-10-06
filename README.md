@@ -196,7 +196,7 @@ The demo can be launched by running the notebook:
 ```
    demo.ipynb
 ```
-Once loaded, you can upload your images and place 2 points that will form the prompt bounding box. Then, you can generate the mask.
+Once loaded, you can upload an image and place 2 points that will create the bounding box (prompt). Then, you can generate the mask.
 
 ## Results on some rings
 ![Demo1](./docs/images/demo1.png)
