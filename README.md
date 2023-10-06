@@ -29,7 +29,7 @@ The bounding boxes shown in the plots are stored in:
    annotations.json
 ```
 
-![Test set](./docs/images/test_set.png)
+![Test set](./docs/images/test_set.png) \
 *Test set*
 
 # Baseline SAM
