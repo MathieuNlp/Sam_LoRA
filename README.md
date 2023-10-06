@@ -66,11 +66,11 @@ The SAM model has 3 main components: The image encoder, prompt encoder and mask 
 
 Let's see the performance of SAM on a sample of our training set and test set.
 ![Baseline preds train set](./docs/images/baseline_train_prediction.png)
-*Baseline SAM predictions on sample of training set*
+*Baseline SAM predictions on a sample of the training set*
 
 
 ![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
-*Baseline SAM predictions on test set*
+*Baseline SAM predictions on the test set*
 
 Every predictions of the baseline model can be found in:
 ```sh
@@ -79,14 +79,14 @@ Every predictions of the baseline model can be found in:
 As we can see, SAM struggles to segment the rings. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble to correctly segment the jewelry. To solve this problem, we can fine-tune the model with our training set.
 
 # Adapters
-The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into blocks of a frozen model and is then trained. The training of adapters enable to solve specific downstream tasks. This method can help solving our problem to segment rings at a relatively low computing cost.
+The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into blocks of a frozen model and are then trained. The training of adapters enable to solve specific downstream tasks. This method can help solving our problem to segment rings at a relatively low computing cost.
 
 ![SAM Architecture](./docs/images/sam_archi.png)
 *SAM model architecture, source: Benjamin Trom - Finegrain AI*
 
-For my model, I chose to use LoRA adapters.
+For SAM, I chose to use the LoRA adapters.
 
-## LoRA
+## Low-Rank Adaptation (LoRA)
 LoRA is an adapter that is using 2 matrices B and A. The 2 matrices have specific dimensions (input_size, r) and (r, input_size) . By specifying a rank r < input_size, we reduce the parameters size and try to capture the task with a small enough rank. By doing the dot product B*A, we get a matrix of shape (input_size, input_size) so no information is lost but the model will have learned a new representation through training.
 
 For our application, we only need to initialize the matrices, freeze SAM and train the adapter so that the frozen model + LoRA learns to segment rings.
