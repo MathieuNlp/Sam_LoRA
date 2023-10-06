@@ -176,12 +176,20 @@ As we can see, the best model is the rank 512. We see that the loss is decreasin
 
 We see that the model lost some understanding of pair rings. 
 
+Every predictions of the SAM LoRA rank 64 model can be found in:
+```sh
+   /plots/worst_model_rank_64
+```
 # Results of the best model (rank 512)
 ![Best model test set](./docs/images/best_model_on_test.png)
 *SAM LoRA rank 512 predictions on test set*
 
 The best model has clearly a better understanding and answer the task of segmenting the rings.
 
+Every predictions of the SAM LoRA rank 512 model can be found in:
+```sh
+   /plots/best_model_rank_512
+```
 # Demo
 I did a gradio webui to test the models on picked up images. The rank will be the same as the one written in the configuration file. I prepared a notebook to run the demo. 
 The demo can be launched by running the notebook:
