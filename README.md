@@ -48,12 +48,12 @@ I added an annotation file that groups the bounding box and ground truth mask fo
 ```
 
 # Baseline SAM
-The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
+The SAM model has 3 main components: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
 
 ![SAM Architecture Paper](./docs/images/sam_paper.png)
 *SAM architecture from paper: https://arxiv.org/abs/2304.02643*
 
-To get our baseline with the dataset, we will first see the capabilities of SAM with zero-shot inference. 
+Let's see the performance of SAM on our train and test set.
 ![Baseline preds train set](./docs/images/baseline_train_prediction.png)
 *Baseline SAM predictions on training set*
 
@@ -62,10 +62,10 @@ To get our baseline with the dataset, we will first see the capabilities of SAM 
 *Baseline SAM predictions on test set*
 
 
-As we can see, SAM struggles to segment the ring. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble rightly segment the jewelry. To solve this problem, we can fine-tune the model. But there exists efficient ways to fine-tuned large pre-trained models.
+As we can see, SAM struggles to segment the rings. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble to correctly segment the jewelry. To solve this problem, we can fine-tune the model with our training set.
 
 # Adapters
-The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into chosen blocks of the frozen model and is trained. The training of adapters enable the adapted model to solve specific downstream task.This method can help solving our problem to a relatively low computing cost.
+The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into chosen blocks a frozen model and is trained. The training of adapters enable to solve specific downstream tasks. This method can help solving our problem to a relatively low computing cost.
 
 ![SAM Architecture](./docs/images/sam_archi.png)
 *SAM model architecture, source: Benjamin Trom - Finegrain AI*
@@ -73,16 +73,25 @@ The full fine-tuning process can be expensive, specially the bigger the model. A
 For my model, I chose to use LoRA adapters.
 
 ## LoRA
-LoRA is an adapter that is using 2 matrices B and A. The 2 matrices have specific dimensions (input_size, r) and (r, input_size) . By specefiying a rank r < input_size, we reduce the parameters size and try to capture the downstream task with a small enough rank. By doing the dot product B*A, we get a matrix of shape (input_size, input_size) so no information is lost. 
+LoRA is an adapter that is using 2 matrices B and A. The 2 matrices have specific dimensions (input_size, r) and (r, input_size) . By specifying a rank r < input_size, we reduce the parameters size and try to capture the task with a small enough rank. By doing the dot product B*A, we get a matrix of shape (input_size, input_size) so no information is lost but the model we learn a new representation.
 
-We only need to initialize the matrices, freeze SAM and tune the matrices components so that the frozen model + LoRA adapter model learns to segment rings.
+For our application, we only need to initialize the matrices, freeze SAM and train the model components so that the frozen model + LoRA learns to segment rings.
 
 ## SAM LoRA
 To apply LoRA to SAM, I had to choose a block to apply our adapter. I chose the image encoder because it could be interesting to tune the block that “understand”/encode the images. My LoRA implementation is adapting the **attention modules (queries and values)** of the ViT base by adding 2 nn.Linear in chain after computing queries and values (equivalent of B*A matrices product).
 The lora adapter is in:
-```
+```sh
    /src/lora.py
 ```
+and to create an instance of SAM LoRA, you can call:
+```python
+   from src.lora import LoRA_sam
+
+   sam = build_sam_vit_b(checkpoint="$PATH_TO_VITB_CHECKPOINT$")
+   sam_lora_class = LoRA_sam(sam, rank=8)
+   sam_lora = sam_lora_class.sam
+```
+
 ![SAM Architecture](./docs/images/sam_lora_archi.png)
 *SAM + LoRA adaption*
 
