@@ -64,9 +64,9 @@ I created a configuration file to regroup the paths, training hyperparameters an
 
 The SAM model has 3 main components: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. For our application, I chose to only take the mask with the highest IoU score.
 
-Let's see the performance of SAM on our train and test set.
+Let's see the performance of SAM on a sample of our training set and test set.
 ![Baseline preds train set](./docs/images/baseline_train_prediction.png)
-*Baseline SAM predictions on training set*
+*Baseline SAM predictions on sample of training set*
 
 
 ![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
