@@ -46,6 +46,11 @@ I added an annotation file that groups the bounding box and ground truth mask fo
 ```
    annotations.json
 ```
+# Configuration file
+I created a configuration file to regroup some parameters for the paths, training hyperparameters and loading of the model.
+```sh
+   config.yaml
+```
 
 # Baseline SAM
 The SAM model has 3 main components: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
@@ -96,17 +101,17 @@ To create an instance of SAM LoRA, you can call (ex. rank 8):
 ![SAM Architecture](./docs/images/sam_lora_archi.png)
 *SAM + LoRA adaption*
 
-Next I will explain the pipeline to train the model.
+Next I will explain the preprocessing pipeline to train the model.
 
 # Preprocessing
-In the original model, a class “SamPredictor” is built to setup an image and predict. However, with this method, we can’t use a batching approach. Therefore, I created a class (Samprocessor) that preprocesses the datasets so that we can use batching for the training. 
+In the original model, a class “SamPredictor” is built to setup an image and predict. However, with this method, we can’t use a batching approach for training. Therefore, I created a class (Samprocessor) that preprocess the datasets and outputs a list(dict) object necessary for SAM.  
 
-The image go trough a longest stride resize and is normalized. Then the image is reshaped to 1024x1024 for the input encoder. Prompt needs to follow the resizing, therefore new coordinates are computed. The resized images and prompts are then passed to the mask decoder that outputs the mask with the highest IoU probability.
+Firstly, the image go trough a longest stride resize and is normalized. Then the image is reshaped to 1024x1024 for the input encoder. The prompt (bounding box) needs to follow the resizing, therefore new coordinates are computed. The resized images and prompts are then passed to the mask decoder that outputs the mask with the highest IoU probability. Finally, the mask is reshaped to the original size of the image.
 
 ![Pre processing pipe](./docs/images/preprocessing_pipeline.png)
 *Preprocessing pipeline*
 
-Note: normalization of the image and reshape to 1024x1024 is done in:
+Note: Normalization and reshape to 1024x1024 of the image is done in:
 ```
    /src/segment_anything/modeling/sam.py
 ```
@@ -114,9 +119,9 @@ Note: normalization of the image and reshape to 1024x1024 is done in:
 ```
    /src/dataloader.py
 ```
-The Sam model requires as input a list(dict) object for batch training. To do this, I to created a dataloader that would generate this object. The dictionnary should contain 3 keys: 
-- image: The processed image
-- boxes: The processed prompt (here bounding box coordinates)
+The Sam model requires as input a list(dict) object to process the input. To get this, I to created a dataloader that would generate this object. The dictionnary must contain 3 keys: 
+- image: The processed image (Longest stide resize)
+- boxes: The processed prompt (here bounding box new coordinates)
 - original_size: The size of the image before transformation (used to transform the image back to the original size after predictions)
 
 I added 2 keys:
@@ -134,16 +139,16 @@ In the dataloader, the processor (Samprocessor class) tranforms the image and pr
 
 
 # Metrics
-I used the Dice Loss to compute the results on the test set. By computing the dice loss, we have access to the Dice similarity coefficient (DSC) by doing: Dice coeff = 1 - Dice Loss.
+To train and test the model performances on the test set, I used the Dice Loss. By computing the dice loss, we have access to the Dice Similarity Coefficient (DSC) by doing: Dice coeff = 1 - Dice Loss.
 
-The dice coefficient gauge the similarity of 2 samples. It is calculated from precision and call (similar to F1-score).
+The dice coefficient gauge the similarity of 2 samples. It is calculated from precision and recall (similar to F1-score).
 The loss is documented on this website: [Dice loss](https://docs.monai.io/en/stable/losses.html)
 
 # Model selection
-Now that our model is defined. We can evaluate the effect of the rank on the model.
+Now that our model is defined. We can evaluate the effect of the rank on the segmentation.
 
 ## Limitation
-I trained the models on colab free. I was only able to train with a batch size of 1 although the code accepts a batch size > 1. Furthermore, I couldn’t add a validation set with early stopping because I would be out of memory. With no validation, there is a risk of overfitting but given my constrains and the number of epochs and the size of the model, we can suppose that the trained models will be the best models.
+I trained the models on colab free. I was only able to train with a batch size of 1 although the code accepts a batch size greater than 1. Furthermore, I couldn’t add a validation set because I would be out of memory. With no validation, there is a risk of overfitting but given my constrains and to simplify, I supposed that the trained models will be the best models.
 
 I trained each models for 50 epochs (chosen arbitrairly), with a batch size of 1.
 
@@ -151,14 +156,14 @@ I trained each models for 50 epochs (chosen arbitrairly), with a batch size of 1
 ![Model comparison rank](./docs/images/model_comparison.jpg) \
 *Comparison of SAM LoRA for different ranks*
 
-As we can see, the best model is the rank 512. We see that the loss is decreasing has the rank rises.  However, we see a spike at rank 64 that is the worst model. This is an interesting behavior and maybe could be related to the fact that near this particular rank we loose understanding of something.
+As we can see, the best model is the rank 512. We see that the loss is decreasing has the rank rises.  However, we see a spike at rank 64 that is the worst model for the LoRAs. This is an interesting behavior and may be related to the fact that near this particular rank we loose understanding of something.
 
 # Results of the worst model (rank 64)
 
 ![Worst model test set](./docs/images/worst_model_on_test.png)
 *SAM LoRA rank 64 predictions on test set*
 
-This is confirmed here, we lost the understanding of double rings. 
+We see that the model lost some understanding of pair rings. 
 
 # Results of the best model (rank 512)
 ![Best model test set](./docs/images/best_model_on_test.png)
@@ -167,11 +172,13 @@ This is confirmed here, we lost the understanding of double rings.
 The best model has clearly a better understanding and answer the task of segmenting the rings.
 
 # Demo
-I did a gradio webui to test the best model on picked up images. I prepared a notebook to run the demo locally or in colab. Once loaded, you can upload you images and place 2 points that will form the prompt boundin box. Then, you can generate the mask.
+I did a gradio webui to test the models on picked up images. The rank will be the same as the one written in the configuration file. I prepared a notebook to run the demo. 
 The demo can be launched by running the notebook:
 ```
    demo.ipynb
 ```
+Once loaded, you can upload your images and place 2 points that will form the prompt bounding box. Then, you can generate the mask.
+
 ## Results on some rings
 ![Demo1](./docs/images/demo1.png)
 *Demo example 1*
@@ -182,12 +189,12 @@ The demo can be launched by running the notebook:
 ![Demo4](./docs/images/demo4.png)
 *Demo example 4*
 
-We can see some good segmentation like in demo 1 or demo 2 but it becomes more difficult whe, there is jewelry or reflection on the ring like on demo 4 and 3.
+We can see some good segmentation like in demo 1 or demo 2 but it becomes more difficult when there is a jewelry or reflection on the ring like on demo 4 and demo 3.
 
 # Conclusion/Discussion
 
-Using adapters we partialyl answer to the task of segmenting rings. In the demo examples we see that the model still struggles to caputre all the rings. This could be because the dataset is small (8 images).
-To upgrade the model, we can add checkpoint and early stopping during training to prevent from overfitting. In addition, do data augmentation to strengthen the model generalization, and increase the batch size if enough computation is available.
+Using adapters we partially answered the task of segmenting rings. In the demo examples we saw that the model still struggles to caputre all the rings. This could be because the training dataset is small (8 images).
+To improve the model, we can add checkpoint and early stopping with a validation set to prevent from overfitting. In addition, doing data augmentation could be interesting to strengthen the model generalization.
 
 # Folder layout
     .
@@ -252,9 +259,10 @@ The project use python poetry.
 ```
 ```sh
    git clone https://github.com/MathieuNlp/Sam_LoRA.git
+```
+```sh
    cd Sam_LoRA
 ```
-
 
 To install the dependencies use:
 ```sh
@@ -274,11 +282,7 @@ Download the image encoder checkpoint (vit-b)
 ```sh
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 ```
-# Configuration file
-I created a configuration file to regroup some parameters for the training and loading of the model.
-```sh
-   config.yaml
-```
+
 # Run training
 To run the training, use:
 ```sh
