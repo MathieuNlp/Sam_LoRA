@@ -79,7 +79,7 @@ Every predictions of the baseline model can be found in:
 As we can see, SAM struggles to segment the rings. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble to correctly segment the jewelry. To solve this problem, we can fine-tune the model with our training set.
 
 # Adapters
-The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into chosen blocks a frozen model and is trained. The training of adapters enable to solve specific downstream tasks. This method can help solving our problem to a relatively low computing cost.
+The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into blocks of a frozen model and is then trained. The training of adapters enable to solve specific downstream tasks. This method can help solving our problem to segment rings at a relatively low computing cost.
 
 ![SAM Architecture](./docs/images/sam_archi.png)
 *SAM model architecture, source: Benjamin Trom - Finegrain AI*
