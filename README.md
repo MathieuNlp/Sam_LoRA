@@ -89,7 +89,7 @@ For my model, I chose to use LoRA adapters.
 ## LoRA
 LoRA is an adapter that is using 2 matrices B and A. The 2 matrices have specific dimensions (input_size, r) and (r, input_size) . By specifying a rank r < input_size, we reduce the parameters size and try to capture the task with a small enough rank. By doing the dot product B*A, we get a matrix of shape (input_size, input_size) so no information is lost but the model will have learned a new representation through training.
 
-For our application, we only need to initialize the matrices, freeze SAM and train the model components so that the frozen model + LoRA learns to segment rings.
+For our application, we only need to initialize the matrices, freeze SAM and train the adapter so that the frozen model + LoRA learns to segment rings.
 
 ## SAM LoRA
 To apply LoRA to SAM, I had to choose a block to apply our adapter. I chose the image encoder because it could be interesting to tune the block that “understand”/encode the images. My LoRA implementation is adapting the **attention modules (queries and values)** of the ViT base by adding 2 nn.Linear in chain after computing queries and values (equivalent of B*A matrices product).
