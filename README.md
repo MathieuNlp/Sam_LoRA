@@ -198,25 +198,25 @@ To upgrade the model, we can add checkpoint and early stopping during training t
     │   │   ├── on_test                      # Predictions on test set
     │   │   └── on_train                     # Predictions on train set
     │   └── rank_comparison.jpg              # Bar plot comparing the dice loss of each models              
-    ├── src
-    │   ├── segment_anything
-    │   ├── dataloader.py
-    │   ├── lora.py
-    │   ├── processor.py
-    │   └── utils.py        
+    ├── src                                  # Folder containing the python scripts for the pipeline
+    │   ├── segment_anything                 # Segment Anything model
+    │   ├── dataloader.py                    # Dataset and data collator
+    │   ├── lora.py                          # LoRA model class and save/load model
+    │   ├── processor.py                     # Processor that transforms the images/prompts
+    │   └── utils.py                         # Utility functions 
     ├── .gitignore
-    ├── annotations.json
-    ├── app.py
-    ├── config.yaml
-    ├── demo.ipynb
-    ├── inference_eval.py
-    ├── inference_plots.py
-    ├── poetry.lock
-    ├── pyproject.toml
-    ├── README.md
-    ├── sam_vit_b_01ec64.pth
-    ├── train.py
-    └── transform_to_mask.py
+    ├── annotations.json                     # Annotations fof mask path and bounding box for each images
+    ├── app.py                               # Script that define the gradio webui
+    ├── config.yaml                          # Configuration file for paths, number of epochs and batch size
+    ├── demo.ipynb                           # Demo notebook
+    ├── inference_eval.py                    # Plots the bat plot and compare the baseline model with othet LoRA models on test set
+    ├── inference_plots.py                   # Plots the prediction on train or test set for a model (hard coded inside)
+    ├── poetry.lock                          # Poetry lock file
+    ├── pyproject.toml                       # Poetry toml file
+    ├── README.md                            
+    ├── sam_vit_b_01ec64.pth                 # Checkpoint of the image encoder (ViT base) got with wget
+    ├── train.py                             # Training script
+    └── transform_to_mask.py                 # Transforms the images on image_before_mask folder into masks
 
 
 # Setup
