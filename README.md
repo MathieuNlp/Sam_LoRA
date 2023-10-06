@@ -166,38 +166,38 @@ To upgrade the model, we can add checkpoint and early stopping during training t
 
 # Folder layout
     .
-    ├── dataset
-    │   ├── image_before_mask
-    │   ├── test
-    │   │   ├── images
-    │   │   └── masks
-    │   ├── train
-    │   │   ├── images
-    │   │   └── masks                 
-    ├── docs
-    │   └── images      
-    ├── lora_weights
-    │   ├── lora_rank2.safetensors
-    │   ├── lora_rank4.safetensors
-    │   ├── lora_rank6.safetensors
-    │   ├── lora_rank8.safetensors
-    │   ├── lora_rank16.safetensors
-    │   ├── lora_rank32.safetensors
-    │   ├── lora_rank64.safetensors
-    │   ├── lora_rank128.safetensors
-    │   ├── lora_rank256.safetensors
-    │   └── lora_rank512.safetensors             
-    ├── plots
-    │   ├── baseline
-    │   │   ├── on_test
-    │   │   └── on_train
-    │   ├── best_model_rank_512
-    │   │   ├── on_test
-    │   │   └── on_train
-    │   ├── worst_model_rank_64
-    │   │   ├── on_test
-    │   │   └── on_train
-    │   └── rank_comparison.jpg               
+    ├── dataset                              # Folder containing the datasets
+    │   ├── image_before_mask                # Images with black background to easily transform to masks
+    │   ├── test                             # Test set
+    │   │   ├── images                       # Images from the test set
+    │   │   └── masks                        # Masks from the test set
+    │   ├── train                            # Train set
+    │   │   ├── images                       # Images from the train set  
+    │   │   └── masks                        # Masks from the train set                 
+    ├── docs                                 # Folder containing ressources for the README
+    │   └── images                           # Images used in the README and some additional result plots      
+    ├── lora_weights                         # Folder containing all the LoRA with different ranks
+    │   ├── lora_rank2.safetensors           # Weights of trained LoRA for rank 2
+    │   ├── lora_rank4.safetensors           # Weights of trained LoRA for rank 4
+    │   ├── lora_rank6.safetensors           # Weights of trained LoRA for rank 6
+    │   ├── lora_rank8.safetensors           # Weights of trained LoRA for rank 8
+    │   ├── lora_rank16.safetensors          # Weights of trained LoRA for rank 16
+    │   ├── lora_rank32.safetensors          # Weights of trained LoRA for rank 32
+    │   ├── lora_rank64.safetensors          # Weights of trained LoRA for rank 64
+    │   ├── lora_rank128.safetensors         # Weights of trained LoRA for rank 128
+    │   ├── lora_rank256.safetensors         # Weights of trained LoRA for rank 256
+    │   └── lora_rank512.safetensors         # Weights of trained LoRA for rank 512           
+    ├── plots                                # Folder with the predictions plots
+    │   ├── baseline                         # Predictions of the baseline model
+    │   │   ├── on_test                      # Predictions on test set
+    │   │   └── on_train                     # Predictions on train set
+    │   ├── best_model_rank_512              # Predictions of the best LoRA model
+    │   │   ├── on_test                      # Predictions on test set
+    │   │   └── on_train                     # Predictions on train set
+    │   ├── worst_model_rank_64              # Predictions of the worst Lora model
+    │   │   ├── on_test                      # Predictions on test set
+    │   │   └── on_train                     # Predictions on train set
+    │   └── rank_comparison.jpg              # Bar plot comparing the dice loss of each models              
     ├── src
     │   ├── segment_anything
     │   ├── dataloader.py
