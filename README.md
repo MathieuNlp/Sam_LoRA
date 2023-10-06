@@ -212,7 +212,7 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
 
 # Conclusion/Discussion
 
-Using adapters, I partially succeded the task of segmenting rings. In the demo examples we saw that the model still struggles to caputre all the rings. This could be because the training dataset is small (only 8 images).
+Using adapters, I partially succeded the task of segmenting rings. In the demo examples we saw that the model still struggles to caputre all the rings. This could be because the training dataset is small (only 8 images) but also because some photos are problematic. For example, a reflection on a ring or in a jewel are tricky situation where the model can be fooled. 
 To improve the model (if enough memory), we could train on higher number of epochs, add model checkpoint and early stopping with a validation set to prevent from overfitting. In addition, doing data augmentation could be interesting to strengthen the model generalization.
 
 Another interesting idea could be to apply LoRA to other blocks of SAM like the mask decoder which is smaller than the image encoder. This could save training time and potentially show better results.
