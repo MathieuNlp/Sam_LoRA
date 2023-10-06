@@ -53,7 +53,7 @@ I added an annotation file that groups the bounding box and ground truth mask fo
 ```
 
 # Configuration file
-I created a configuration file to regroup the paths, training hyperparameters and loading of the model.
+I created a configuration file to regroup the paths, training hyperparameters and loading of the ViT-B image encoder.
 ```sh
    config.yaml
 ```
