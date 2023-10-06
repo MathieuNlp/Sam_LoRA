@@ -125,13 +125,13 @@ Firstly, the image go trough a longest stride resize and is normalized. Then the
    /src/dataloader.py
 ```
 The Sam model requires as input a list(dict) object to process the input. To get this, I to created a dataloader that would generate this object. The dictionnary must contain 3 keys: 
-- image: The processed image (Longest stide resize)
-- boxes: The processed prompt (here bounding box new coordinates)
-- original_size: The size of the image before transformation (used to transform the image back to the original size after predictions)
+- **image**: The processed image (Longest stide resize)
+- **boxes**: The processed prompt (here bounding box new coordinates)
+- **original_size**: The size of the image before transformation (used to transform the image back to the original size after predictions)
 
 I added 2 keys:
-- prompt: The bounding box coordinates before transformation
-- ground_truth_mask: The ground truth mask
+- **prompt**: The bounding box coordinates before transformation
+- **ground_truth_mask**: The ground truth mask
 
 ## Processor
 ```
