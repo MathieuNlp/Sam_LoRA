@@ -59,10 +59,10 @@ I created a configuration file to regroup the paths, training hyperparameters an
 ```
 
 # Baseline SAM
-The SAM model has 3 main components: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. For our application, I choose to only take the mask with the highest IoU score.
-
 ![SAM Architecture Paper](./docs/images/sam_paper.png)
 *SAM architecture from paper: https://arxiv.org/abs/2304.02643*
+
+The SAM model has 3 main components: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. For our application, I choose to only take the mask with the highest IoU score.
 
 Let's see the performance of SAM on our train and test set.
 ![Baseline preds train set](./docs/images/baseline_train_prediction.png)
