@@ -161,12 +161,12 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
     │   ├── image_before_mask
     │   ├── test
     │   │   ├── images
-    │   │   └──  masks
+    │   │   └── masks
     │   ├── train
     │   │   ├── images
-    │   │   └──  masks                 
+    │   │   └── masks                 
     ├── docs
-    │   └──  images      
+    │   └── images      
     ├── lora_weights
     │   ├── lora_rank2.safetensors
     │   ├── lora_rank4.safetensors
@@ -181,20 +181,20 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
     ├── plots
     │   ├── baseline
     │   │   ├── on_test
-    │   │   └──  on_train
+    │   │   └── on_train
     │   ├── best_model_rank_512
     │   │   ├── on_test
-    │   │   └──  on_train
+    │   │   └── on_train
     │   ├── worst_model_rank_64
     │   │   ├── on_test
-    │   │   └──  on_train
-    │   └──  rank_comparison.jpg               
+    │   │   └── on_train
+    │   └── rank_comparison.jpg               
     ├── src
     │   ├── segment_anything
     │   ├── dataloader.py
     │   ├── lora.py
     │   ├── processor.py
-    │   └──  utils.py        
+    │   └── utils.py        
     ├── .gitignore
     ├── annotations.json
     ├── app.py
