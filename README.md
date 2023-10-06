@@ -245,7 +245,11 @@ Download the image encoder checkpoint (vit-b)
 ```sh
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 ```
-
+# Configuration file
+I created a configuration file to regroup some parameters for the training and loading of the model.
+```sh
+   config.yaml
+```
 # Run training
 To run the training, use:
 ```sh
