@@ -72,7 +72,10 @@ Let's see the performance of SAM on our train and test set.
 ![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
 *Baseline SAM predictions on test set*
 
-
+All the predictions of the baseline model can be found in:
+```sh
+   /plots/baseline
+```
 As we can see, SAM struggles to segment the rings. The model takes the inside of the ring has part of the object which is wrong. In addition, it has trouble to correctly segment the jewelry. To solve this problem, we can fine-tune the model with our training set.
 
 # Adapters
