@@ -20,6 +20,10 @@ I built a dataset of 2 different rings with white background. The 2 types of rin
 The single rings have different views and some as a jewel on it. The material can also change between gold and silver.
 The pair rings are 2 rings with one on top of the other. The outline of this can be challenging to segment. Same as the single ring, the material are either gold or silver.
 In the training set, I equally splited both type of rings. The test set is composed of 2 images: a single ring and a pair rings.
+
+![Test set](./docs/images/test_set.png) \
+*Test set*
+
 ## Dataset folders
 The dataset for train and test can be found in:
 ```
@@ -42,9 +46,6 @@ I added an annotation file that groups the bounding box and ground truth mask fo
 ```
    annotations.json
 ```
-
-![Test set](./docs/images/test_set.png) \
-*Test set*
 
 # Baseline SAM
 The SAM model has 3 blocks: The image encoder, prompt encoder and mask decoder. The mask decoder takes has input the encoded image and encoded prompt to return masks. 
