@@ -140,7 +140,7 @@ I added 2 keys:
 
 In the dataloader, the processor (Samprocessor class) tranforms the image and prompt so that both are prepared for the image encoder and prompt encoder. It will output the dictionnary containing the keys image, boxes and prompt.
 
-Note: Normalization and reshape to 1024x1024 of the image is done in:
+**Note: Normalization and reshape to 1024x1024 of the image is done in:**
 ```
    /src/segment_anything/modeling/sam.py
 ```
