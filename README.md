@@ -306,6 +306,11 @@ Download the image encoder checkpoint (vit-b)
 ```
 
 # Run training
+Configure the model and path in the configuration file:
+```sh
+   config.yaml
+```
+
 To run the training, use:
 ```sh
    poetry run python train.py
