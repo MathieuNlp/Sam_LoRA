@@ -124,6 +124,7 @@ Note: Normalization and reshape to 1024x1024 of the image is done in:
 ```
    /src/segment_anything/modeling/sam.py
 ```
+Hence, the Samprocessor only need to do the longest stride resize and transform the coordinates of the bounding box.
 ## Dataloader
 ```
    /src/dataloader.py
