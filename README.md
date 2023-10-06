@@ -2,13 +2,13 @@
 
 # Introduction
 
-Segment anything is a foundational model released by Meta ([SAM](https://segment-anything.com/)). Pre-trained over 1 billion images, the model shows high performance zero-shot inference.
+Segment anything is a foundational model released by Meta ([SAM](https://segment-anything.com/)) and pre-trained over 1 billion images. The model shows high quality zero-shot inference.
 
 ![Dog segmentation](./docs/images/dog_segmented.png)
 *Segmentation of an image by SAM*
 
-As good as they are, pre-trained models cannot answer to every segmentation tasks. The model has a large understanding of everything but situation-wise, it can be compromised. I would like to dig deeper in this problem by applying SAM to product packshots. 
-Product packshots are mainly done with a unicolor background and the object upfront. Those images tends to have less noise and SAM should be performing really well in contrast of some city image with lots of information. However, we will that it's still a challenging problem.
+As good as they are, pre-trained models cannot answer to every segmentation tasks. The model has a large understanding of everything but situation-wise, the model can perform poorly. I dug deeper into this problem by applying SAM to product packshots. 
+Product packshots are mostly done with a one-color background and the object upfront. Those images have less noise than regular images and therefore SAM should be performing well. However, we will that in the application of jewelry, SAM as difficulties segmenting.
 
 # Problem
 Can we segment jewelry rings used for product packshots ?
@@ -17,14 +17,26 @@ Can we segment jewelry rings used for product packshots ?
 I built a dataset of 2 different rings with white background. The 2 types of rings are:
 - Single ring
 - Pair rings
-The single rings have different views and a jewel in it. We can find silver and gold single rings.
-The pair rings are 2 rings with one on top of the other. The outline of this can be challenging to segment.
-In the training set, I tried to equally split both type of rings. The test set is constitued of 2 images, a single ring and a pair rings.
-The dataset for train and test are in :
+The single rings have different views and some as a jewel on it. The material can also change between gold and silver.
+The pair rings are 2 rings with one on top of the other. The outline of this can be challenging to segment. Same as the single ring, the material are either gold or silver.
+In the training set, I equally splited both type of rings. The test set is composed of 2 images: a single ring and a pair rings.
+The dataset for train and test can be found in:
 ```
-   /dataset
+   /dataset/train
 ```
-The bounding boxes shown in the plots are stored in:
+```
+   /dataset/test
+```
+In each sets, we have the images and the masks. To create the masks, I used Paint3D to outline the image and putted a black background. The pre-transformed image masks are in:
+```
+   /dataset/image_before_mask
+```
+Then I passed each pre-transformed image masks into a function that convert it into a binary mask. 
+```
+   transform_to_mask.py
+```
+
+I added an annotation file that groups the bounding box and ground truth mask for each images (for inference). During the training, I extracted the bounding boxes out of the ground truth masks.
 ```
    annotations.json
 ```
