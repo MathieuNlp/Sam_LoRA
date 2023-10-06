@@ -35,7 +35,7 @@ The dataset for train and test can be found in:
    /dataset/test
 ```
 ## Mask creation
-In each sets, we have the images and the masks. To create the masks, I used Paint3D to outline the image and putted a black background. The pre-transformed image masks are in:
+In each datasets, we have the images and the masks. To create the masks, I used Paint3D to outline the rings and applied a black background to facilitate the binary masking. The pre-transformed image masks are store in:
 ```
    /dataset/image_before_mask
 ```
@@ -43,13 +43,17 @@ Then I passed each pre-transformed image masks into a function that convert it i
 ```
    transform_to_mask.py
 ```
+![Test set](./docs/images/ring_test_masks.png) \
+*Test set masks*
+
 ## Annotations
 I added an annotation file that groups the bounding box and ground truth mask for each images (for inference). During the training, I extracted the bounding boxes out of the ground truth masks.
 ```
    annotations.json
 ```
+
 # Configuration file
-I created a configuration file to regroup some parameters for the paths, training hyperparameters and loading of the model.
+I created a configuration file to regroup the paths, training hyperparameters and loading of the model.
 ```sh
    config.yaml
 ```
