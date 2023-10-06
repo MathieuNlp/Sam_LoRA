@@ -72,7 +72,7 @@ Let's see the performance of SAM on our train and test set.
 ![Baseline preds test set](./docs/images/baseline_test_set_prediction.png)
 *Baseline SAM predictions on test set*
 
-All the predictions of the baseline model can be found in:
+Every predictions of the baseline model can be found in:
 ```sh
    /plots/baseline
 ```
