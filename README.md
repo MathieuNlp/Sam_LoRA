@@ -20,7 +20,7 @@ I built a dataset of 2 different rings with white background. The 2 types of rin
 
 The single rings have different view angle and some as jewels. The material can also change between silve and gold.
 
-The pair rings are 2 rings with one on top of the other creating a challenging segmentation task. Same as the single ring, the material are either silver or gold.
+The pair rings are 2 rings with one on top of the other, creating a challenging segmentation task. Same as the single ring, the material are either silver or gold.
 I equally splited the rings type in the training set. The test set is composed of 2 images: a single ring and a pair rings.
 
 ![Test set](./docs/images/test_set.png) \
