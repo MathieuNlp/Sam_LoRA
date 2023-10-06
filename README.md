@@ -205,31 +205,50 @@ We can see some good segmentation like in demo 1 or demo 2 but it becomes more d
     └── transform_to_mask.py
 
 
-# Get the SAM checkpoint (must be done inside "sam_lora_poetry" folder)
+# Setup
+The project use poetry.
+
+```sh
+   pip install poetry
+```
+```sh
+   git clone https://github.com/MathieuNlp/Sam_LoRA.git
+   cd Sam_LoRA
+```
+
+
+To install the dependencies use:
+```sh
+   !poetry config virtualenvs.in-project false
+```
+
+```sh
+   poetry install --all-extras
+```
+
+Some dependencies are not loaded with the poetry install, so I added them manually.
+```sh
+   !poetry run pip install --upgrade torch torchvision gradio safetensors opencv-python monai
+```
+
+Download the image encoder checkpoint (vit-b)
 ```sh
    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 ```
 
-# Training
-The training is not using the SamPredictor from Meta because I would like to be able to handle batches. So i created a processor.py file in /src that processes the images and prompts accordingly. The saved weights are in lora.safetensors.
+# Run training
+To run the training, use:
 ```sh
    poetry run python train.py
 ```
 
-# Inference
-Run an inference with the saved weights from the training.
+# Run Inference
+
+## Plot inference
+To plot the inference of the model, run:
 ```sh
-   poetry run python inference.py
+   poetry run python inference_plots.py
 ```
-# Plots
-The plots folder regroup some comparaison and results to visualize the results.
-
-- **comparaison.png**: Plot during the training the ground truth mask on top and predicted masks on the bottom.
-- **gt_mask.jpg**: Ground truth mask example.
-- **perfume2_notraining.jpg**: Perfume 2 mask predicted by the model with no training.
-- **perfume2.jpg**: Perfume 2 mask predicted by the model trained with 10 epochs.
-- **pred_perfume2_no_training.jpg**: Original image and predicted mask visualisation
-
 
 # Acknowledgments
 Thank you to:
