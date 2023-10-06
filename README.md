@@ -8,7 +8,7 @@ Segment anything is a foundational model released by Meta ([SAM](https://segment
 *Segmentation of an image by SAM*
 
 As good as they are, foundational models cannot answer to every segmentation tasks. The model has a large understanding of everything but situation-wise, SAM could perform poorly. I dug deeper into this problem by applying SAM to product packshots. 
-Product packshots are mostly done with an object upfront and a one-color background. Those images have less noise than regular images and therefore SAM should provide greate results. However, we will see that in the application of jewelry, SAM as difficulties segmenting.
+Product packshots are mostly done with an object upfront and a one-color background. Those images have less noise than regular images and therefore SAM should provide great results. However, we will see that in jewelry, SAM as difficulties segmenting.
 
 # Problem
 Can we segment jewelry rings used in product packshots ?
@@ -18,9 +18,9 @@ I built a dataset of 2 different rings with white background. The 2 types of rin
 - Single ring
 - Pair rings
 
-The single rings have different view angle and some as a jewel on it. The material can also change between gold and silver.
+The single rings have different view angle and some as jewels. The material can also change between silve and gold.
 
-The pair rings are 2 rings with one on top of the other. The outline can be challenging to segment. Same as the single ring, the material are either gold or silver.
+The pair rings are 2 rings with one on top of the other creating a challenging segmentation task. Same as the single ring, the material are either silver or gold.
 I equally splited the rings type in the training set. The test set is composed of 2 images: a single ring and a pair rings.
 
 ![Test set](./docs/images/test_set.png) \
