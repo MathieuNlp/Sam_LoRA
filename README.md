@@ -82,7 +82,7 @@ As we can see, SAM struggles to segment the rings. The model takes the inside of
 The full fine-tuning process can be expensive, specially the bigger the model. An alternative for this is an adapter. Adapters plugs into blocks of a frozen model and are then trained. The training of adapters enable to solve specific downstream tasks. This method can help solving our problem to segment rings at a relatively low computing cost.
 
 ![SAM Architecture](./docs/images/sam_archi.png)
-*SAM model architecture, source: Benjamin Trom - Finegrain AI*
+*SAM model architecture, source: Finegrain AI*
 
 For SAM, I chose to use the LoRA adapters.
 
@@ -328,7 +328,6 @@ To plot the inference of the model, run:
 Thank you to:
 - Niels Rogge - HuggingFace: https://github.com/NielsRogge/Transformers-Tutorials/blob/master/SAM/Fine_tune_SAM_(segment_anything)_on_a_custom_dataset.ipynb
 - JamesQFreeman: https://github.com/JamesQFreeman/Sam_LoRA
-- Denis Brulé, Benjamin Trom - Finegrain AI
 
 # Author
 Mathieu Nalpon
